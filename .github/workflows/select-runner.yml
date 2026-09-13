@@ -1,0 +1,123 @@
+name: Select available Linux runner
+
+on:
+  workflow_call:
+    secrets:
+      RUNNER_STATUS_TOKEN:
+        required: false
+    outputs:
+      self-hosted:
+        description: Whether an idle compatible organization runner is available
+        value: ${{ jobs.select.outputs.self-hosted }}
+
+permissions:
+  contents: read
+
+jobs:
+  select:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    outputs:
+      self-hosted: ${{ steps.select.outputs.self-hosted || 'false' }}
+    steps:
+      - name: Select runner without executing repository code
+        id: select
+        continue-on-error: true
+        shell: bash
+        env:
+          RUNNER_STATUS_TOKEN: ${{ secrets.RUNNER_STATUS_TOKEN }}
+        run: |
+          python3 - <<'RUNNER_SELECTOR_PY'
+          """Select an idle organization runner; every uncertainty keeps hosted CI."""
+
+          import json
+          import os
+          import urllib.request
+          from pathlib import Path
+
+          LABELS = {"self-hosted", "linux", "x64", "docker-builder"}
+          REPOSITORY = "morozhenko-apps/SocksShoppingStore"
+          MAX_PAGES = 3
+          PAGE_SIZE = 100
+          MAX_RESPONSE_BYTES = 1024 * 1024
+
+
+          def select_runner(event, event_name, token, fetch_page):
+              """Return (self_hosted, reason); fetch_page is the only network dependency."""
+              if not isinstance(event, dict):
+                  return False, "invalid-event"
+              repo = event.get("repository")
+              if not isinstance(repo, dict) or repo.get("full_name") != REPOSITORY:
+                  return False, "unexpected-repository"
+              if repo.get("private") is not False:
+                  return False, "public-repository-required"
+              if event_name == "pull_request":
+                  return False, "public-pull-request-hosted"
+              if event_name not in ("push", "workflow_dispatch"):
+                  return False, "unsupported-event"
+              if not token:
+                  return False, "missing-status-token"
+              try:
+                  for page in range(1, MAX_PAGES + 1):
+                      payload = fetch_page(page)
+                      if not isinstance(payload, dict) or not isinstance(payload.get("runners"), list):
+                          return False, "invalid-api-response"
+                      runners = payload["runners"]
+                      if len(runners) > PAGE_SIZE:
+                          return False, "invalid-api-response"
+                      for runner in runners:
+                          if not isinstance(runner, dict):
+                              continue
+                          labels = runner.get("labels")
+                          if not isinstance(labels, list):
+                              continue
+                          names = {
+                              label["name"].lower()
+                              for label in labels
+                              if isinstance(label, dict) and isinstance(label.get("name"), str)
+                          }
+                          if (runner.get("status") == "online"
+                                  and runner.get("busy") is False
+                                  and LABELS.issubset(names)):
+                              return True, "idle-compatible-runner"
+                      if len(runners) < PAGE_SIZE:
+                          return False, "no-idle-compatible-runner"
+                  return False, "pagination-limit"
+              except Exception:
+                  return False, "status-api-unavailable"
+
+
+          def main():
+              token = os.environ.get("RUNNER_STATUS_TOKEN", "")
+
+              def fetch_page(page):
+                  request = urllib.request.Request(
+                      "https://api.github.com/orgs/morozhenko-apps/actions/runners"
+                      f"?per_page={PAGE_SIZE}&page={page}",
+                      headers={
+                          "Authorization": f"Bearer {token}",
+                          "Accept": "application/vnd.github+json",
+                          "X-GitHub-Api-Version": "2022-11-28",
+                      },
+                  )
+                  with urllib.request.urlopen(request, timeout=5) as response:
+                      data = response.read(MAX_RESPONSE_BYTES + 1)
+                  if len(data) > MAX_RESPONSE_BYTES:
+                      raise ValueError("Runner response exceeds the bounded read")
+                  return json.loads(data)
+
+              try:
+                  event = json.loads(Path(os.environ["GITHUB_EVENT_PATH"]).read_text())
+                  selected, reason = select_runner(
+                      event, os.environ.get("GITHUB_EVENT_NAME", ""), token, fetch_page
+                  )
+              except Exception:
+                  selected, reason = False, "event-unavailable"
+              with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as output:
+                  output.write(f"self-hosted={str(selected).lower()}\n")
+              print(f"Runner routing: {'self-hosted' if selected else 'GitHub-hosted'} ({reason})")
+
+
+          if __name__ == "__main__":
+              main()
+          RUNNER_SELECTOR_PY
