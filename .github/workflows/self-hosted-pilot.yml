@@ -1,0 +1,71 @@
+name: Self-hosted dev-tests pilot
+
+on:
+  push:
+    branches: [ ci-self-hosted-migration ]
+
+permissions:
+  contents: read
+
+jobs:
+  select-runner:
+    uses: ./.github/workflows/select-runner.yml
+    secrets:
+      RUNNER_STATUS_TOKEN: ${{ secrets.RUNNER_STATUS_TOKEN }}
+
+  dev-tests-pilot:
+    needs: select-runner
+    runs-on: ${{ fromJSON(needs.select-runner.outputs.self-hosted == 'true' && '["self-hosted","linux","x64","docker-builder"]' || '["ubuntu-latest"]') }}
+    timeout-minutes: 30
+    container:
+      image: ${{ needs.select-runner.outputs.self-hosted == 'true' && 'mcr.microsoft.com/dotnet/sdk:8.0-bookworm-slim' || '' }}
+      options: --security-opt=no-new-privileges
+    steps:
+      - name: Prepare isolated self-hosted environment
+        if: ${{ runner.environment == 'self-hosted' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          export DEBIAN_FRONTEND=noninteractive
+          apt-get update
+          apt-get install -y --no-install-recommends \
+            bash ca-certificates curl git gzip tar unzip xz-utils
+          rm -rf /var/lib/apt/lists/*
+
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore
+        run: |
+          dotnet restore SocksShoppingStore/SocksShoppingStore.csproj
+          dotnet restore SocksShoppingStore.Tests/SocksShoppingStore.Tests.csproj
+
+      - name: Run fast tests (Unit + Integration + API-Smoke)
+        env:
+          BASE_URL: http://127.0.0.1:5123
+          USE_TEST_FACTORY: '1'
+          RUN_UI_TESTS: '0'
+        run: |
+          dotnet test SocksShoppingStore.Tests/SocksShoppingStore.Tests.csproj -c Release --filter "TestCategory=Unit|TestCategory=Integration|TestCategory=API-Smoke" --logger "trx;LogFileName=pilot.trx"
+
+      - name: Integration coverage (scoped)
+        shell: bash
+        env:
+          USE_TEST_FACTORY: '1'
+        run: |
+          dotnet test SocksShoppingStore.Tests/SocksShoppingStore.Tests.csproj -c Release \
+            --filter "TestCategory=Integration" \
+            --settings coverlet.integration.runsettings
+
+      - name: API coverage (scoped via Include)
+        shell: bash
+        env:
+          USE_TEST_FACTORY: '1'
+        run: |
+          dotnet test SocksShoppingStore.Tests/SocksShoppingStore.Tests.csproj -c Release \
+            --filter "TestCategory=API-Smoke" \
+            --settings coverlet.api.runsettings \
+            --results-directory SocksShoppingStore.Tests/TestResults/CoverageApi
