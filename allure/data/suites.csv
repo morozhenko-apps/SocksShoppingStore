@@ -1,538 +1,538 @@
 "Status","Start Time","Stop Time","Duration in ms","Parent Suite","Suite","Sub Suite","Test Class","Test Method","Name","Description"
-"passed","Sun Sep 13 09:33:37 UTC 2026","Sun Sep 13 09:33:38 UTC 2026","1001","","UI","","CatalogUiMoreTests","Catalog_Sort_Name_Asc_Orders_Correctly","Catalog_Sort_Name_Asc_Orders_Correctly","What: Sort by name ascending via UI button.
-Steps: 1) Open Home; 2) Click 'name_asc'.
-Expected: Names are in non-decreasing order."
-"passed","Sun Sep 13 09:33:09 UTC 2026","Sun Sep 13 09:33:10 UTC 2026","48","","Integration","","SecurityAndLocalizationTests","Home_Has_SecurityHeaders","Home_Has_SecurityHeaders","What: Verify home page responds with core security headers.
+"passed","Sun Sep 13 09:39:47 UTC 2026","Sun Sep 13 09:39:47 UTC 2026","0","","Unit","","ProductCatalogLocalizerTests","Localizer_Single_English_Default_NoChange","Localizer_Single_English_Default_NoChange","What: Verify EN localization leaves product unchanged.
 Steps:
-1) GET '/'.
-Expected: X-Frame-Options, X-Content-Type-Options, and Content-Security-Policy headers are present."
-"passed","Sun Sep 13 09:34:19 UTC 2026","Sun Sep 13 09:34:19 UTC 2026","3","","UI","","HomeControllerTests","Home_Index_SearchAndFilter_SortsByPriceDesc","Home_Index_SearchAndFilter_SortsByPriceDesc","What: Verify search/filter with price range sorts by price_desc.
+1) Create English sock.
+2) Localize with 'en'.
+Expected: Name equals original English name."
+"passed","Sun Sep 13 09:39:47 UTC 2026","Sun Sep 13 09:39:47 UTC 2026","0","","Unit","","RequestMetricsAndHelpersTests","Currency_Eur_Returns_EuroSymbolOrCode","Currency_Eur_Returns_EuroSymbolOrCode","What: Verify Currency.Eur formats string with euro symbol or 'EUR'.
 Steps:
-1) Call Index with q='socks', sort='price_desc', minPrice=3.5, maxPrice=5.0.
-Expected: Items are sorted by price descending."
-"passed","Sun Sep 13 09:33:08 UTC 2026","Sun Sep 13 09:33:08 UTC 2026","2","","Integration","","ApiDependenciesRepoAndServiceTests","JsonRepository_CRUD","JsonRepository_CRUD","What: Json repository CRUD (API dependency).
+1) Format 12.34m.
+Expected: Output contains '€' or 'EUR'."
+"passed","Sun Sep 13 09:39:47 UTC 2026","Sun Sep 13 09:39:47 UTC 2026","0","","Integration","","ProductsApiBehaviorTests","ProductsApi_Filter_Q_SetsHeaders_AndFilters","ProductsApi_Filter_Q_SetsHeaders_AndFilters","What: Verify text filter 'q' narrows results and sets headers.
+Steps:
+1) Call GetAllProducts with q='sock'.
+Expected: 200 JSON; X-Total-Count header present; returned list count <= total."
+"passed","Sun Sep 13 09:39:46 UTC 2026","Sun Sep 13 09:39:46 UTC 2026","3","","Integration","","ApiDependenciesRepoAndServiceTests","JsonRepository_CRUD","JsonRepository_CRUD","What: Json repository CRUD (API dependency).
 Steps:
 1) Add/Update/Delete item.
 Expected: Operations succeed."
-"passed","Sun Sep 13 09:34:21 UTC 2026","Sun Sep 13 09:34:22 UTC 2026","985","","UI","","ProductUiTests","ProductDetails_BackToCatalog_NavigatesHome","ProductDetails_BackToCatalog_NavigatesHome","What: Back to catalog link returns to home.
+"passed","Sun Sep 13 09:39:46 UTC 2026","Sun Sep 13 09:39:46 UTC 2026","42","","Integration","","AppEndpointsTests","Cart_AddToCart_FallsBack_To_Referer","Cart_AddToCart_FallsBack_To_Referer","What: Cart redirect path falls back to Referer when present and safe.
 Steps:
-1) Open product details; click 'Back to Catalog'.
-Expected: URL returns to '/'."
-"passed","Sun Sep 13 09:33:10 UTC 2026","Sun Sep 13 09:33:10 UTC 2026","0","","Unit Tests","","ShoppingCartUnitTests","Cart_SetQuantityZero_RemovesItem","Cart_SetQuantityZero_RemovesItem","What: Setting quantity to zero removes the item from the cart.
+1) GET '/Cart/AddToCart?id=1' with Referer '/Products/Details/1' (no auto-redirect).
+Expected: 302 to '/Products/Details/1'."
+"passed","Sun Sep 13 09:39:47 UTC 2026","Sun Sep 13 09:39:47 UTC 2026","0","","Integration","","ProductsApiBehaviorTests","ProductsApi_Item_SetsCachingHeaders","ProductsApi_Item_SetsCachingHeaders","What: Item endpoint sets caching headers.
 Steps:
-1) Add one item to cart.
-2) SetQuantity(id, 0).
-Expected: Item removed; count equals 0."
-"passed","Sun Sep 13 09:33:09 UTC 2026","Sun Sep 13 09:33:09 UTC 2026","2","","Unit","","CartControllerJsonUnitTests","Cart_DeleteItem_And_Clear_ReturnJsonWithZeros","Cart_DeleteItem_And_Clear_ReturnJsonWithZeros","What: Verify DeleteItem and Clear return JSON payloads with zeroed totals.
+1) Call GetProduct(1).
+Expected: ETag and Last-Modified present."
+"passed","Sun Sep 13 09:39:47 UTC 2026","Sun Sep 13 09:39:47 UTC 2026","1","","Unit","","CheckoutControllerUnitFlowTests","Checkout_Review_Behaves_AsExpected","Checkout_Review_Behaves_AsExpected","What: Review returns view when draft exists; otherwise redirects to Index.
 Steps:
-1) Add item; call DeleteItem and Clear with Accept=application/json.
-Expected: JSON shows totals equal to zero."
-"passed","Sun Sep 13 09:33:09 UTC 2026","Sun Sep 13 09:33:09 UTC 2026","0","","Unit","","CartControllerNavigationUnitTests","Cart_AddToCart_LocalReturnUrl_Redirects","Cart_AddToCart_LocalReturnUrl_Redirects","What: When returnUrl is local, AddToCart redirects there.
+1) Without draft -> redirect.
+2) With draft -> view.
+Expected: Behaviors as described."
+"passed","Sun Sep 13 09:39:47 UTC 2026","Sun Sep 13 09:39:47 UTC 2026","2","","Unit","","ModelsAndOptionsTests","LegalOptions_Defaults_AreNotEmpty","LegalOptions_Defaults_AreNotEmpty","What: Verify default LegalOptions fields are not empty.
 Steps:
-1) Call AddToCart with returnUrl='/?q=x'.
-Expected: LocalRedirect to '/?q=x'."
-"passed","Sun Sep 13 09:33:09 UTC 2026","Sun Sep 13 09:33:09 UTC 2026","1","","Integration","","ProductsApiBehaviorTests","ProductsApi_Page_Defaults_When_OutOfBounds","ProductsApi_Page_Defaults_When_OutOfBounds","What: Verify defaulting behavior for page and pageSize.
+1) Instantiate LegalOptions.
+Expected: ControllerName and ContactEmail are not empty."
+"passed","Sun Sep 13 09:41:16 UTC 2026","Sun Sep 13 09:41:17 UTC 2026","1362","","UI","","ProductUiTests","ProductDetails_AddFive_IncrementsCounterByFive","ProductDetails_AddFive_IncrementsCounterByFive","What: Multiple clicks add multiple quantities of the same item.
+Steps:
+1) Open details; click 'Add to Cart' 5 times.
+Expected: Header total sum increases; unique items counter may remain unchanged."
+"passed","Sun Sep 13 09:39:47 UTC 2026","Sun Sep 13 09:39:47 UTC 2026","0","","Unit Tests","","ShoppingCartUnitTests","Cart_AddRemoveDelete_CalculatesTotals","Cart_AddRemoveDelete_CalculatesTotals","What: Validate add/remove/delete operations and total calculation.
+Steps:
+1) Add socks (two of A, one of B).
+2) Verify total items and sum.
+3) Remove one A; delete B.
+Expected: Counts and totals update accordingly."
+"passed","Sun Sep 13 09:39:46 UTC 2026","Sun Sep 13 09:39:46 UTC 2026","58","","Integration","","ApiDependenciesHelpersTests","SessionHelper_Serializes_ShoppingCart","SessionHelper_Serializes_ShoppingCart","What: SessionHelper serializes and deserializes ShoppingCart (API dependency).
+Steps:
+1) Create cart with 2 items; Set/Get via session.
+Expected: Deserialized not null and item count equals 2."
+"passed","Sun Sep 13 09:39:46 UTC 2026","Sun Sep 13 09:39:46 UTC 2026","1","","Integration","","ApiDependenciesHelpersTests","ErrorViewModel_ShowRequestId_Works","ErrorViewModel_ShowRequestId_Works","What: ErrorViewModel.ShowRequestId reflects RequestId (API dependency).
+Steps:
+1) Set null and non-null request id.
+Expected: ShowRequestId false then true."
+"passed","Sun Sep 13 09:40:36 UTC 2026","Sun Sep 13 09:40:37 UTC 2026","844","","UI","","CatalogUiTests","Catalog_Filter_By_PriceRange_Shows_Only_InRange","Catalog_Filter_By_PriceRange_Shows_Only_InRange","What: Filter catalog by price range.
+Steps:
+1) Open home with minPrice=3.0,maxPrice=5.0.
+Expected: All visible prices fall within [3.0, 5.0]."
+"passed","Sun Sep 13 09:39:46 UTC 2026","Sun Sep 13 09:39:46 UTC 2026","1","","Integration","","ApiDependenciesRepoAndServiceTests","LegacyRepository_Basics","LegacyRepository_Basics","What: Legacy repository basic behaviors (API dependency).
+Steps:
+1) GetAllSocks -> count>=8.
+2) GetSockById(1) not null; (-1) null."
+"passed","Sun Sep 13 09:39:47 UTC 2026","Sun Sep 13 09:39:47 UTC 2026","1","","Unit","","CartControllerJsonUnitTests","Cart_SetQuantity_Zero_RemovesAndReturnsJson","Cart_SetQuantity_Zero_RemovesAndReturnsJson","What: Verify SetQuantity returns JSON and removes item when quantity=0.
+Steps:
+1) Add item; SetQuantity(id, 0) with Accept=application/json.
+Expected: JSON item has quantity=0 and subtotal=0."
+"passed","Sun Sep 13 09:39:47 UTC 2026","Sun Sep 13 09:39:47 UTC 2026","1","","Integration","","MiddlewareTests","Middleware_SecurityHeaders_AddsCoreHeaders","Middleware_SecurityHeaders_AddsCoreHeaders","What: Ensure SecurityHeadersMiddleware adds core security headers and CSP nonce.
+Steps:
+1) Invoke middleware with a fresh HttpContext.
+Expected: Response contains CSP header; X-Frame-Options is DENY; a nonce is stored in HttpContext.Items."
+"passed","Sun Sep 13 09:39:47 UTC 2026","Sun Sep 13 09:39:47 UTC 2026","2","","Integration","","ProductsApiBehaviorTests","ProductsApi_304_On_IfModifiedSince_Item_Future","ProductsApi_304_On_IfModifiedSince_Item_Future","What: Force 304 on item with future If-Modified-Since.
+Steps:
+1) Set If-Modified-Since to future date.
+Expected: 304."
+"passed","Sun Sep 13 09:39:47 UTC 2026","Sun Sep 13 09:39:47 UTC 2026","47","","Integration","","AppEndpointsTests","Legal_Privacy_And_Terms_Ok","Legal_Privacy_And_Terms_Ok","What: Legal pages return 200 and include configured values.
+Steps:
+1) GET '/legal/privacy' and '/legal/terms'.
+Expected: 200 OK for each."
+"passed","Sun Sep 13 09:39:46 UTC 2026","Sun Sep 13 09:39:46 UTC 2026","21","","Integration","","ApiDependenciesMiscTests","RequestMetrics_EmptySnapshot_Zeros","RequestMetrics_EmptySnapshot_Zeros","What: RequestMetrics empty snapshot returns zero percentiles.
+Steps:
+1) Snapshot without records.
+Expected: p50==0; samples==0."
+"passed","Sun Sep 13 09:39:47 UTC 2026","Sun Sep 13 09:39:47 UTC 2026","0","","Unit","","LegalAndLocalizationUnitTests","Legal_Terms_SetsViewData_FromOptions","Legal_Terms_SetsViewData_FromOptions","What: Verify Legal.Terms populates ViewData from options.
+Steps:
+1) Instantiate LegalController with options.
+2) Call Terms().
+Expected: ViewData contains configured ControllerName and ContactEmail."
+"passed","Sun Sep 13 09:41:15 UTC 2026","Sun Sep 13 09:41:16 UTC 2026","1089","","UI","","HeaderFooterUiTests","HeaderLogo_NavigatesToHome","HeaderLogo_NavigatesToHome","What: Clicking logo navigates to Home page.
+Steps:
+1) Open product details.
+2) Click header brand 'SocksShoppingStore'.
+Expected: URL path is '/' (catalog)."
+"passed","Sun Sep 13 09:39:47 UTC 2026","Sun Sep 13 09:39:47 UTC 2026","1","","Integration","","ProductsApiBehaviorTests","ProductsApi_Page_Defaults_When_OutOfBounds","ProductsApi_Page_Defaults_When_OutOfBounds","What: Verify defaulting behavior for page and pageSize.
 Steps:
 1) Call with page<1 and pageSize<=0.
 Expected: Returns a valid page with non-negative count."
-"passed","Sun Sep 13 09:33:09 UTC 2026","Sun Sep 13 09:33:09 UTC 2026","0","","Unit","","ProductCatalogLocalizerTests","Localizer_List_Russian_Overrides_NameOrDescription","Localizer_List_Russian_Overrides_NameOrDescription","What: Verify RU localization overrides product fields as expected.
+"passed","Sun Sep 13 09:40:37 UTC 2026","Sun Sep 13 09:40:58 UTC 2026","20908","","UI","","CatalogUiTests","Catalog_InvalidSearch_NoCrash","Catalog_InvalidSearch_NoCrash","What: Invalid search query should not break the page.
+Steps:
+1) Open home with q containing special characters.
+Expected: Page loads (either cards or 'NoItems' alert). No crash."
+"passed","Sun Sep 13 09:39:47 UTC 2026","Sun Sep 13 09:39:47 UTC 2026","1","","Integration","","ProductsApiBehaviorTests","ProductsApi_304_On_IfModifiedSince_List","ProductsApi_304_On_IfModifiedSince_List","What: If-Modified-Since forces 304 on list when unchanged.
+Steps:
+1) First call to capture Last-Modified.
+2) Second call with If-Modified-Since set to same value.
+Expected: 304."
+"passed","Sun Sep 13 09:40:04 UTC 2026","Sun Sep 13 09:40:16 UTC 2026","11600","","UI","","CartUiTests","Cart_Delete_Removes_Item_And_Empty_State","Cart_Delete_Removes_Item_And_Empty_State","What: Deleting item empties cart when single item present.
+Steps:
+1) Add item; go to cart.
+2) Click trash button.
+Expected: Cart becomes empty (info alert visible)."
+"passed","Sun Sep 13 09:39:47 UTC 2026","Sun Sep 13 09:39:47 UTC 2026","1","","Integration","","ProductsApiControllerTests","ProductsApi_GetAll_SetsCachingHeaders_AndReturnsJson","ProductsApi_GetAll_SetsCachingHeaders_AndReturnsJson","What: Verify GET /api/products returns JSON and sets caching headers.
+Steps:
+1) Call controller GetAllProducts.
+2) Inspect ContentResult and response headers.
+Expected: Content-Type starts with application/json; ETag, Last-Modified and Cache-Control present; X-Total-Count is numeric."
+"passed","Sun Sep 13 09:39:47 UTC 2026","Sun Sep 13 09:39:47 UTC 2026","1","","Unit","","RequestMetricsAndHelpersTests","RequestMetrics_Computes_Percentiles_AndSamples","RequestMetrics_Computes_Percentiles_AndSamples","What: Verify RequestMetrics computes percentiles and sample count.
+Steps:
+1) Record 10 samples.
+2) Read snapshot and serialize to JSON.
+Expected: ok>0; p50>0; samples==10."
+"passed","Sun Sep 13 09:39:45 UTC 2026","Sun Sep 13 09:39:46 UTC 2026","33","","Integration","","ApiDependenciesControllersSmokeTests","HomeController_Index_Smoke","HomeController_Index_Smoke","What: HomeController Index basic smoke (API dependency).
+Steps:
+1) Call Index with default parameters.
+Expected: ViewResult with model."
+"passed","Sun Sep 13 09:41:00 UTC 2026","Sun Sep 13 09:41:02 UTC 2026","1122","","UI","","CatalogUiTests","Details_AddToCart_IncrementsCounter","Details_AddToCart_IncrementsCounter","What: Add to cart from product details.
+Steps:
+1) Open first product details; click Add to Cart.
+2) Verify header cart counter increments.
+Expected: Counter increases by 1."
+"passed","Sun Sep 13 09:39:47 UTC 2026","Sun Sep 13 09:39:47 UTC 2026","0","","Unit","","ModelsAndOptionsTests","ErrorViewModel_ShowRequestId_ReflectsRequestId","ErrorViewModel_ShowRequestId_ReflectsRequestId","What: Verify ShowRequestId reflects whether RequestId is set.
+Steps:
+1) Create ErrorViewModel with null and non-null RequestId.
+Expected: null => false; non-null => true."
+"passed","Sun Sep 13 09:39:47 UTC 2026","Sun Sep 13 09:39:47 UTC 2026","7","","Integration","","JsonProductRepositoryTests","JsonRepository_CreateAddUpdateDelete_Works","JsonRepository_CreateAddUpdateDelete_Works","What: Validate JSON repository CRUD flow.
+Steps:
+1) Create repo with temp path (seed copies legacy items).
+2) Add new sock; update its description; delete it.
+Expected: Add/Update/Delete succeed; item appears/changes/disappears accordingly."
+"passed","Sun Sep 13 09:39:47 UTC 2026","Sun Sep 13 09:39:47 UTC 2026","0","","Unit","","ProductCatalogLocalizerTests","Localizer_List_Russian_Overrides_NameOrDescription","Localizer_List_Russian_Overrides_NameOrDescription","What: Verify RU localization overrides product fields as expected.
 Steps:
 1) Build a list with one English item.
 2) Localize with 'ru'.
 Expected: Name or description differs from English."
-"passed","Sun Sep 13 09:33:09 UTC 2026","Sun Sep 13 09:33:09 UTC 2026","0","","Integration","","ProductRepositoryTests","Repository_GetAllSocks_Returns_ExpectedCount","Repository_GetAllSocks_Returns_ExpectedCount","What: Verify legacy in-memory repository returns non-empty list.
+"passed","Sun Sep 13 09:41:14 UTC 2026","Sun Sep 13 09:41:15 UTC 2026","1125","","UI","","HeaderFooterUiTests","HeaderCartSummary_Updates_OnAdd","HeaderCartSummary_Updates_OnAdd","What: Cart summary updates near header icon.
 Steps:
-1) Call ProductRepository.GetAllSocks().
-Expected: Count >= 8."
-"passed","Sun Sep 13 09:33:09 UTC 2026","Sun Sep 13 09:33:09 UTC 2026","1","","Unit","","CheckoutControllerUnitFlowTests","Checkout_PostIndex_Invalid_ReturnsView","Checkout_PostIndex_Invalid_ReturnsView","What: Posting with honeypot/empty cart yields ModelState errors and returns view.
+1) Read counter and total.
+2) Add item from catalog.
+Expected: Counter or total changes (increments)."
+"passed","Sun Sep 13 09:39:46 UTC 2026","Sun Sep 13 09:39:46 UTC 2026","362","","Integration","","ApiTests","ProductsApi_GetAll_ReturnsOk_AndExpectedCount","ProductsApi_GetAll_ReturnsOk_AndExpectedCount","What: Verify /api/products returns 200 and expected number of items.
 Steps:
-1) Post Index with Website filled or empty cart.
-Expected: ModelState invalid; returns View."
-"passed","Sun Sep 13 09:33:10 UTC 2026","Sun Sep 13 09:33:10 UTC 2026","0","","Unit Tests","","SessionHelperTests","SessionHelpers_SetAndGet_SerializesShoppingCart","SessionHelpers_SetAndGet_SerializesShoppingCart","What: Verify session Set/Get helpers serialize ShoppingCart.
+1) Issue GET /api/products (via HttpClient or RestClient).
+2) Deserialize response to list of Sock.
+Expected: HTTP 200; list is not null; count equals 8."
+"passed","Sun Sep 13 09:39:47 UTC 2026","Sun Sep 13 09:39:47 UTC 2026","35","","Integration","","SecurityAndLocalizationTests","Home_Has_SecurityHeaders","Home_Has_SecurityHeaders","What: Verify home page responds with core security headers.
 Steps:
-1) Create cart with two items; session.Set(""Cart"", cart).
-2) session.Get<ShoppingCart>(""Cart"").
-Expected: Not null; total items equals 2."
-"passed","Sun Sep 13 09:33:09 UTC 2026","Sun Sep 13 09:33:09 UTC 2026","2","","Unit","","MiddlewareUnitTests","Middleware_ConcurrencyLimiter_Returns429_WhenSaturated","Middleware_ConcurrencyLimiter_Returns429_WhenSaturated","What: Ensure ConcurrencyLimiterMiddleware returns 429 when saturated.
+1) GET '/'.
+Expected: X-Frame-Options, X-Content-Type-Options, and Content-Security-Policy headers are present."
+"passed","Sun Sep 13 09:41:02 UTC 2026","Sun Sep 13 09:41:03 UTC 2026","1054","","UI","","CheckoutUiTests","Checkout_Form_Displays","Checkout_Form_Displays","What: Checkout form displays.
+Steps: 1) Navigate to /Checkout.
+Expected: Inputs for name/email/address/city/postal/country and Review button visible."
+"passed","Sun Sep 13 09:41:16 UTC 2026","Sun Sep 13 09:41:16 UTC 2026","6","","UI","","LegalAndLocalizationControllerTests","Localization_Set_WritesCookie_AndRedirects","Localization_Set_WritesCookie_AndRedirects","What: Verify Localization.Set writes culture cookie and redirects locally.
 Steps:
-1) Set MaxConcurrentRequests=1; hold first request; second returns 429."
-"passed","Sun Sep 13 09:34:03 UTC 2026","Sun Sep 13 09:34:04 UTC 2026","862","","UI","","CatalogUiTests","Catalog_Sort_Price_Desc_Orders_Correctly","Catalog_Sort_Price_Desc_Orders_Correctly","What: Sort by price descending.
+1) Call Set('ru','/').
+Expected: Response 'Set-Cookie' contains .AspNetCore.Culture; LocalRedirect result."
+"passed","Sun Sep 13 09:39:46 UTC 2026","Sun Sep 13 09:39:46 UTC 2026","40","","Integration","","ApiTests","ProductsApi_RateLimit_ReturnsJson_WhenAcceptJson","ProductsApi_RateLimit_ReturnsJson_WhenAcceptJson","What: When client sends Accept: application/json and exceeds API rate limit, the 429 response is JSON.
 Steps:
-1) Open home with sort=price_desc.
-Expected: Visible prices are in non-increasing order."
-"passed","Sun Sep 13 09:33:09 UTC 2026","Sun Sep 13 09:33:09 UTC 2026","0","","Unit","","LegacyProductRepositoryUnitTests","LegacyRepo_GetAll_And_ById","LegacyRepo_GetAll_And_ById","What: Verify legacy repository returns list and resolves items by id.
+1) Issue > ApiPerMinute requests to /api/products with Accept=application/json.
+Expected: Receive 429 Too Many Requests with application/json body containing 'error' and 'message'."
+"passed","Sun Sep 13 09:39:47 UTC 2026","Sun Sep 13 09:39:47 UTC 2026","0","","Unit","","LegalAndLocalizationUnitTests","Localization_Set_NonLocalUrl_FallsBackToHome","Localization_Set_NonLocalUrl_FallsBackToHome","What: Non-local returnUrl should fallback to Home/Index.
 Steps:
-1) GetAllSocks() -> count >= 8.
-2) GetSockById(1) -> not null; GetSockById(-1) -> null."
-"passed","Sun Sep 13 09:33:08 UTC 2026","Sun Sep 13 09:33:08 UTC 2026","2","","Integration","","ApiDependenciesControllersSmokeTests","ProductsController_Details_Smoke","ProductsController_Details_Smoke","What: ProductsController.Details returns view for valid id (API dependency).
-Steps:
-1) Call Details(1).
-Expected: ViewResult with model."
-"passed","Sun Sep 13 09:33:08 UTC 2026","Sun Sep 13 09:33:08 UTC 2026","2","","Integration","","ApiDependenciesMiscTests","ProductRepository_Static_Basics","ProductRepository_Static_Basics","What: Static ProductRepository returns items (API dependency).
-Steps:
-1) Call GetAllSocks; GetSockById(1).
-Expected: Non-empty list; non-null item for id=1."
-"passed","Sun Sep 13 09:33:09 UTC 2026","Sun Sep 13 09:33:09 UTC 2026","2","","Integration","","MiddlewareTests","Middleware_ConcurrencyLimiter_Returns429_WhenSaturated","Middleware_ConcurrencyLimiter_Returns429_WhenSaturated","What: Ensure ConcurrencyLimiterMiddleware returns 429 when saturated.
-Steps:
-1) Set MaxConcurrentRequests=1; hold first request.
-2) Start second request.
-Expected: Second returns 429 Too Many Requests."
-"passed","Sun Sep 13 09:33:30 UTC 2026","Sun Sep 13 09:33:31 UTC 2026","1782","","UI","","CartUiTests","Cart_Increment_Quantity_Increases_By_One","Cart_Increment_Quantity_Increases_By_One","What: Increment quantity via '+' button.
-Steps:
-1) Add item; go to cart.
-2) Click '+' and observe quantity.
-Expected: Quantity increases by 1."
-"passed","Sun Sep 13 09:34:19 UTC 2026","Sun Sep 13 09:34:21 UTC 2026","1280","","UI","","ProductUiTests","ProductDetails_AddFive_IncrementsCounterByFive","ProductDetails_AddFive_IncrementsCounterByFive","What: Multiple clicks add multiple quantities of the same item.
-Steps:
-1) Open details; click 'Add to Cart' 5 times.
-Expected: Header total sum increases; unique items counter may remain unchanged."
-"passed","Sun Sep 13 09:33:09 UTC 2026","Sun Sep 13 09:33:09 UTC 2026","64","","Integration","","AppEndpointsTests","Legal_Privacy_And_Terms_Ok","Legal_Privacy_And_Terms_Ok","What: Legal pages return 200 and include configured values.
-Steps:
-1) GET '/legal/privacy' and '/legal/terms'.
-Expected: 200 OK for each."
-"passed","Sun Sep 13 09:33:08 UTC 2026","Sun Sep 13 09:33:08 UTC 2026","1","","Integration","","ApiDependenciesRepoAndServiceTests","LegacyRepository_CRUD","LegacyRepository_CRUD","What: Legacy repository CRUD via adapter (API dependency).
-Steps:
-1) Add new sock; Update; Delete.
-Expected: Update true; Delete true; then null by id."
-"passed","Sun Sep 13 09:33:09 UTC 2026","Sun Sep 13 09:33:09 UTC 2026","65","","Integration","","AppEndpointsTests","Cart_Json_Actions_Work","Cart_Json_Actions_Work","What: Cart JSON endpoints work via Accept header.
-Steps:
-1) GET '/Cart/AddToCart?id=1' with Accept: application/json.
-2) GET '/Cart/RemoveFromCart?id=1' with Accept: application/json.
-Expected: 200; JSON contains totals and item block."
-"passed","Sun Sep 13 09:34:02 UTC 2026","Sun Sep 13 09:34:03 UTC 2026","1385","","UI","","CatalogUiTests","Catalog_LazyLoad_Increases_CardCount_When_Available","Catalog_LazyLoad_Increases_CardCount_When_Available","What: Lazy-load adds more items when available.
-Steps:
-1) Open home; click 'Load more' (if present).
-Expected: Card count increases or stays if already all loaded."
-"passed","Sun Sep 13 09:33:40 UTC 2026","Sun Sep 13 09:33:41 UTC 2026","843","","UI","","CatalogUiTests","Catalog_Filter_By_PriceRange_Shows_Only_InRange","Catalog_Filter_By_PriceRange_Shows_Only_InRange","What: Filter catalog by price range.
-Steps:
-1) Open home with minPrice=3.0,maxPrice=5.0.
-Expected: All visible prices fall within [3.0, 5.0]."
-"passed","Sun Sep 13 09:33:09 UTC 2026","Sun Sep 13 09:33:09 UTC 2026","3","","Unit","","HomeControllerUnitTestsExtended","Home_Index_Covers_Sorts_Filters_And_Paging","Home_Index_Covers_Sorts_Filters_And_Paging","What: Exercise Home.Index across sort modes and filters to cover branches.
+1) Call Set('en','http://evil.com').
+Expected: LocalRedirect to '/'."
+"passed","Sun Sep 13 09:39:47 UTC 2026","Sun Sep 13 09:39:47 UTC 2026","4","","Unit","","HomeControllerUnitTestsExtended","Home_Index_Covers_Sorts_Filters_And_Paging","Home_Index_Covers_Sorts_Filters_And_Paging","What: Exercise Home.Index across sort modes and filters to cover branches.
 Steps:
 1) Call Index with q filter.
 2) Call Index with min/max price.
 3) Call Index with sort=name_desc, price_asc, price_desc.
 4) Call Index with pagination inputs.
 Expected: Calls succeed and return ViewResult; model fields are consistent."
-"passed","Sun Sep 13 09:34:18 UTC 2026","Sun Sep 13 09:34:19 UTC 2026","1028","","UI","","HeaderFooterUiTests","HeaderLogo_NavigatesToHome","HeaderLogo_NavigatesToHome","What: Clicking logo navigates to Home page.
+"passed","Sun Sep 13 09:40:32 UTC 2026","Sun Sep 13 09:40:33 UTC 2026","1196","","UI","","CatalogUiMoreTests","Catalog_Reset_Filters","Catalog_Reset_Filters","What: Reset filters and sorting.
 Steps:
-1) Open product details.
-2) Click header brand 'SocksShoppingStore'.
-Expected: URL path is '/' (catalog)."
-"passed","Sun Sep 13 09:33:09 UTC 2026","Sun Sep 13 09:33:09 UTC 2026","1","","Unit","","CartControllerJsonUnitTests","Cart_SetQuantity_Zero_RemovesAndReturnsJson","Cart_SetQuantity_Zero_RemovesAndReturnsJson","What: Verify SetQuantity returns JSON and removes item when quantity=0.
+1) Apply price range; click Reset.
+Expected: Card count is restored/increases (smoke check)."
+"passed","Sun Sep 13 09:39:47 UTC 2026","Sun Sep 13 09:39:47 UTC 2026","0","","Integration","","ProductRepositoryTests","Repository_GetAllSocks_Returns_ExpectedCount","Repository_GetAllSocks_Returns_ExpectedCount","What: Verify legacy in-memory repository returns non-empty list.
 Steps:
-1) Add item; SetQuantity(id, 0) with Accept=application/json.
-Expected: JSON item has quantity=0 and subtotal=0."
-"passed","Sun Sep 13 09:33:08 UTC 2026","Sun Sep 13 09:33:08 UTC 2026","19","","Integration","","ApiDependenciesMiscTests","RequestMetrics_EmptySnapshot_Zeros","RequestMetrics_EmptySnapshot_Zeros","What: RequestMetrics empty snapshot returns zero percentiles.
+1) Call ProductRepository.GetAllSocks().
+Expected: Count >= 8."
+"passed","Sun Sep 13 09:39:47 UTC 2026","Sun Sep 13 09:39:47 UTC 2026","2","","Unit","","MiddlewareUnitTests","Middleware_ConcurrencyLimiter_Returns429_WhenSaturated","Middleware_ConcurrencyLimiter_Returns429_WhenSaturated","What: Ensure ConcurrencyLimiterMiddleware returns 429 when saturated.
 Steps:
-1) Snapshot without records.
-Expected: p50==0; samples==0."
-"passed","Sun Sep 13 09:33:09 UTC 2026","Sun Sep 13 09:33:09 UTC 2026","1","","Integration","","ProductsApiControllerTests","ProductsApi_GetById_Returns304_OnIfModifiedSince","ProductsApi_GetById_Returns304_OnIfModifiedSince","What: Validate If-Modified-Since behavior for GetProduct.
+1) Set MaxConcurrentRequests=1; hold first request; second returns 429."
+"passed","Sun Sep 13 09:39:47 UTC 2026","Sun Sep 13 09:39:47 UTC 2026","4","","Integration","","ProductsApiBehaviorTests","ProductsApi_Sort_Invalid_FallsBack_To_Default","ProductsApi_Sort_Invalid_FallsBack_To_Default","What: Invalid sort value falls back to default name_asc.
 Steps:
-1) First call to obtain Last-Modified.
-2) Second call with If-Modified-Since header.
-Expected: Status is either 200 or 304 (environment dependent)."
-"passed","Sun Sep 13 09:33:10 UTC 2026","Sun Sep 13 09:33:10 UTC 2026","0","","Unit Tests","","ShoppingCartUnitTests","Cart_AddRemoveDelete_CalculatesTotals","Cart_AddRemoveDelete_CalculatesTotals","What: Validate add/remove/delete operations and total calculation.
+1) Call with sort='unknown'; call with sort='name_asc'.
+Expected: Both responses yield identical ordering."
+"passed","Sun Sep 13 09:39:46 UTC 2026","Sun Sep 13 09:39:46 UTC 2026","1","","Integration","","ApiDependenciesControllersSmokeTests","ProductsController_Details_Smoke","ProductsController_Details_Smoke","What: ProductsController.Details returns view for valid id (API dependency).
 Steps:
-1) Add socks (two of A, one of B).
-2) Verify total items and sum.
-3) Remove one A; delete B.
-Expected: Counts and totals update accordingly."
-"passed","Sun Sep 13 09:33:09 UTC 2026","Sun Sep 13 09:33:09 UTC 2026","1","","Integration","","ProductsApiBehaviorTests","ProductsApi_Filter_Q_SetsHeaders_AndFilters","ProductsApi_Filter_Q_SetsHeaders_AndFilters","What: Verify text filter 'q' narrows results and sets headers.
+1) Call Details(1).
+Expected: ViewResult with model."
+"passed","Sun Sep 13 09:39:47 UTC 2026","Sun Sep 13 09:39:47 UTC 2026","0","","Unit","","ModelsAndOptionsTests","RateOptions_Defaults_ArePositive","RateOptions_Defaults_ArePositive","What: Verify default RateOptions values are positive.
 Steps:
-1) Call GetAllProducts with q='sock'.
-Expected: 200 JSON; X-Total-Count header present; returned list count <= total."
-"passed","Sun Sep 13 09:33:33 UTC 2026","Sun Sep 13 09:33:34 UTC 2026","966","","UI","","CatalogUiMoreTests","Catalog_Click_Image_Opens_Details","Catalog_Click_Image_Opens_Details","What: Click on product image opens details page.
+1) Instantiate RateOptions.
+Expected: GlobalPerMinute>0; ApiPerMinute>0."
+"passed","Sun Sep 13 09:39:47 UTC 2026","Sun Sep 13 09:39:47 UTC 2026","0","","Unit","","MiddlewareUnitTests","Middleware_SecurityHeaders_AddsCoreHeaders","Middleware_SecurityHeaders_AddsCoreHeaders","What: Ensure SecurityHeadersMiddleware adds core security headers and nonce.
 Steps:
-1) Click image in first card.
-Expected: URL contains '/Products/Details'."
-"passed","Sun Sep 13 09:33:09 UTC 2026","Sun Sep 13 09:33:09 UTC 2026","0","","Integration","","ProductRepositoryTests","Repository_GetSockById_ReturnsNull_ForUnknown","Repository_GetSockById_ReturnsNull_ForUnknown","What: Verify GetSockById returns null for unknown id.
+1) Invoke middleware with a fresh HttpContext.
+Expected: CSP header present; nonce stored; X-Frame-Options=DENY."
+"passed","Sun Sep 13 09:39:47 UTC 2026","Sun Sep 13 09:39:47 UTC 2026","1","","Unit","","MiddlewareUnitTests","Middleware_FreeTier_BlockAll_Returns503_ExceptAllowlisted","Middleware_FreeTier_BlockAll_Returns503_ExceptAllowlisted","What: Verify FreeTierGuardMiddleware blocks all except allowlisted paths.
+Steps:
+1) Configure options: Enabled=true, BlockAllTraffic=true, AllowPaths=['/healthz'].
+2) '/' -> 503; '/healthz' -> next()."
+"passed","Sun Sep 13 09:39:47 UTC 2026","Sun Sep 13 09:39:47 UTC 2026","0","","Unit","","LegacyProductRepositoryUnitTests","LegacyRepo_GetAll_And_ById","LegacyRepo_GetAll_And_ById","What: Verify legacy repository returns list and resolves items by id.
+Steps:
+1) GetAllSocks() -> count >= 8.
+2) GetSockById(1) -> not null; GetSockById(-1) -> null."
+"passed","Sun Sep 13 09:39:47 UTC 2026","Sun Sep 13 09:39:47 UTC 2026","58","","Integration","","AppEndpointsTests","Products_Details_Returns_Ok","Products_Details_Returns_Ok","What: Product details page returns 200.
+Steps:
+1) GET '/Products/Details/1'.
+Expected: 200 OK."
+"passed","Sun Sep 13 09:39:46 UTC 2026","Sun Sep 13 09:39:46 UTC 2026","2","","Integration","","ApiDependenciesRepoAndServiceTests","LegacyRepository_CRUD","LegacyRepository_CRUD","What: Legacy repository CRUD via adapter (API dependency).
+Steps:
+1) Add new sock; Update; Delete.
+Expected: Update true; Delete true; then null by id."
+"passed","Sun Sep 13 09:39:47 UTC 2026","Sun Sep 13 09:39:47 UTC 2026","1","","Unit","","ProductsAndHomeUnitTests","Products_Details_NotFound_And_View","Products_Details_NotFound_And_View","What: ProductsController.Details returns NotFound for missing id and view for valid id.
+Steps:
+1) Call Details(-1) -> NotFound.
+2) Call Details(1) -> ViewResult with model."
+"passed","Sun Sep 13 09:39:47 UTC 2026","Sun Sep 13 09:39:47 UTC 2026","2","","Unit","","CartControllerJsonUnitTests","Cart_DeleteItem_And_Clear_ReturnJsonWithZeros","Cart_DeleteItem_And_Clear_ReturnJsonWithZeros","What: Verify DeleteItem and Clear return JSON payloads with zeroed totals.
+Steps:
+1) Add item; call DeleteItem and Clear with Accept=application/json.
+Expected: JSON shows totals equal to zero."
+"passed","Sun Sep 13 09:39:47 UTC 2026","Sun Sep 13 09:39:47 UTC 2026","2","","Unit","","JsonProductRepositoryUnitTests","JsonRepository_CRUD_Works","JsonRepository_CRUD_Works","What: Validate JSON repository CRUD flow (unit style).
+Steps:
+1) Create repo with temp path (seed from legacy).
+2) Add new sock; update description; delete.
+Expected: Operations succeed accordingly."
+"passed","Sun Sep 13 09:40:21 UTC 2026","Sun Sep 13 09:40:32 UTC 2026","11121","","UI","","CatalogUiMoreTests","Catalog_Price_MinGreaterThanMax_Handled","Catalog_Price_MinGreaterThanMax_Handled","What: Min greater than Max should lead to empty or unchanged list (implementation-dependent).
+Steps:
+1) Set min=10, max=5; Apply.
+Expected: Either 'NoItems' alert or fewer cards."
+"passed","Sun Sep 13 09:41:03 UTC 2026","Sun Sep 13 09:41:14 UTC 2026","11010","","UI","","HeaderFooterUiTests","HeaderCartLink_NavigatesToCart","HeaderCartLink_NavigatesToCart","What: Clicking header cart link navigates to cart page.
+Steps:
+1) Click cart icon.
+Expected: URL contains '/Cart'."
+"passed","Sun Sep 13 09:39:47 UTC 2026","Sun Sep 13 09:39:47 UTC 2026","1","","Integration","","ProductRepositoryTests","Repository_GetSockById_ReturnsNull_ForUnknown","Repository_GetSockById_ReturnsNull_ForUnknown","What: Verify GetSockById returns null for unknown id.
 Steps:
 1) Call GetSockById with negative id.
 Expected: Null."
-"passed","Sun Sep 13 09:33:09 UTC 2026","Sun Sep 13 09:33:09 UTC 2026","1","","Integration","","ProductsApiBehaviorTests","ProductsApi_304_On_IfModifiedSince_Item_Future","ProductsApi_304_On_IfModifiedSince_Item_Future","What: Force 304 on item with future If-Modified-Since.
+"passed","Sun Sep 13 09:39:47 UTC 2026","Sun Sep 13 09:39:47 UTC 2026","1","","Integration","","ProductsApiBehaviorTests","ProductsApi_Filter_Price_And_Sort_PriceDesc","ProductsApi_Filter_Price_And_Sort_PriceDesc","What: Verify price range filters and sort by price_desc.
 Steps:
-1) Set If-Modified-Since to future date.
-Expected: 304."
-"passed","Sun Sep 13 09:33:39 UTC 2026","Sun Sep 13 09:33:40 UTC 2026","912","","UI","","CatalogUiMoreTests","Catalog_Sort_Price_Asc_Orders_Correctly","Catalog_Sort_Price_Asc_Orders_Correctly","What: Sort by price ascending via UI button.
-Steps: 1) Open Home; 2) Click 'price_asc'.
-Expected: Prices are in non-decreasing order."
-"passed","Sun Sep 13 09:33:08 UTC 2026","Sun Sep 13 09:33:08 UTC 2026","30","","Integration","","ApiDependenciesControllersSmokeTests","HomeController_Index_Smoke","HomeController_Index_Smoke","What: HomeController Index basic smoke (API dependency).
+1) Call GetAllProducts with minPrice/maxPrice and sort='price_desc'.
+Expected: Returned list sorted descending by price and all prices within range."
+"passed","Sun Sep 13 09:39:46 UTC 2026","Sun Sep 13 09:39:46 UTC 2026","1","","Integration","","ApiDependenciesRepoAndServiceTests","ProductCatalogLocalizer_RU_EN","ProductCatalogLocalizer_RU_EN","What: Catalog localizer EN/RU (API dependency).
 Steps:
-1) Call Index with default parameters.
-Expected: ViewResult with model."
-"passed","Sun Sep 13 09:33:09 UTC 2026","Sun Sep 13 09:33:09 UTC 2026","34","","Integration","","AppEndpointsTests","Cart_AddToCart_Redirects_To_ReturnUrl","Cart_AddToCart_Redirects_To_ReturnUrl","What: AddToCart redirects back to returnUrl when provided and local.
+1) Localize list with 'ru' and 'en'.
+Expected: RU modifies name; EN leaves it."
+"passed","Sun Sep 13 09:39:47 UTC 2026","Sun Sep 13 09:39:47 UTC 2026","0","","Unit","","LegalAndLocalizationUnitTests","Localization_Set_WritesCookie_AndRedirects_Local","Localization_Set_WritesCookie_AndRedirects_Local","What: Verify Localization.Set writes culture cookie and local redirects.
+Steps:
+1) Call Set('ru-RU','/').
+Expected: Response Set-Cookie contains .AspNetCore.Culture; LocalRedirect result."
+"passed","Sun Sep 13 09:39:47 UTC 2026","Sun Sep 13 09:39:47 UTC 2026","0","","Unit","","CartControllerNavigationUnitTests","Cart_AddToCart_RefererFallback_Behaves","Cart_AddToCart_RefererFallback_Behaves","What: When Referer points to product page, AddToCart redirects back; if from Cart, goes Home.
+Steps:
+1) Set Referer to '/Products/Details/1' -> LocalRedirect to that path.
+2) Set Referer to '/Cart' -> RedirectToAction Home/Index.
+Expected: Behaviors as described."
+"passed","Sun Sep 13 09:39:47 UTC 2026","Sun Sep 13 09:39:47 UTC 2026","0","","Unit","","CartControllerJsonUnitTests","Cart_RemoveFromCart_ReturnsJson_AndStopsAtOne","Cart_RemoveFromCart_ReturnsJson_AndStopsAtOne","What: Verify RemoveFromCart returns JSON payload and does not reduce below 1 when quantity==1.
+Steps:
+1) Add same item twice; remove once via RemoveFromCart.
+Expected: Remaining quantity is 1 in JSON; totals reflect change."
+"passed","Sun Sep 13 09:39:47 UTC 2026","Sun Sep 13 09:39:47 UTC 2026","37","","Integration","","SecurityAndLocalizationTests","Home_Csp_ContainsNonce","Home_Csp_ContainsNonce","What: Verify CSP header contains a per-request nonce on Home.
+Steps:
+1) GET '/'.
+Expected: 'Content-Security-Policy' header exists and contains ""script-src 'self' 'nonce-...'""."
+"passed","Sun Sep 13 09:39:46 UTC 2026","Sun Sep 13 09:39:46 UTC 2026","1","","Integration","","ApiDependenciesControllersSmokeTests","LegalController_Privacy_Smoke","LegalController_Privacy_Smoke","What: LegalController Privacy returns view (API dependency).
+Steps:
+1) Call Privacy().
+Expected: ViewResult."
+"passed","Sun Sep 13 09:39:46 UTC 2026","Sun Sep 13 09:39:46 UTC 2026","5","","Integration","","ApiDependenciesMiddlewareTests","SecurityHeaders_AddsCoreHeaders","SecurityHeaders_AddsCoreHeaders","What: Verify SecurityHeaders middleware behavior (API dependency).
+Steps:
+1) Invoke with new HttpContext.
+Expected: CSP header and nonce present; X-Frame-Options=DENY."
+"passed","Sun Sep 13 09:41:18 UTC 2026","Sun Sep 13 09:41:19 UTC 2026","1012","","UI","","ProductUiTests","ProductDetails_DisplaysKeyElements","ProductDetails_DisplaysKeyElements","What: Product details page shows key elements.
+Steps:
+1) Open first product details.
+Expected: Image, name, description, price, 'Add to Cart', 'Back to Catalog' visible."
+"passed","Sun Sep 13 09:39:47 UTC 2026","Sun Sep 13 09:39:47 UTC 2026","0","","Integration","","ProductsApiBehaviorTests","ProductsApi_GetById_NotFound_ForUnknown","ProductsApi_GetById_NotFound_ForUnknown","What: Unknown product id returns 404.
+Steps:
+1) Call GetProduct(-1).
+Expected: NotFound."
+"passed","Sun Sep 13 09:39:47 UTC 2026","Sun Sep 13 09:39:47 UTC 2026","0","","Unit","","ProductsAndHomeUnitTests","Home_Privacy_ReturnsView","Home_Privacy_ReturnsView","What: Home.Privacy returns a view.
+Steps:
+1) Call Privacy().
+Expected: ViewResult."
+"passed","Sun Sep 13 09:39:47 UTC 2026","Sun Sep 13 09:39:47 UTC 2026","6","","Unit","","CheckoutControllerUnitFlowTests","Checkout_GetIndex_ReturnsView","Checkout_GetIndex_ReturnsView","What: Verify GET /Checkout returns a view with default model.
+Steps:
+1) Call Index().
+Expected: ViewResult with CheckoutViewModel."
+"passed","Sun Sep 13 09:39:47 UTC 2026","Sun Sep 13 09:39:47 UTC 2026","1","","Unit","","OrderTests","Total_Sums_OrderItem_Subtotals","Total_Sums_OrderItem_Subtotals",""
+"passed","Sun Sep 13 09:39:46 UTC 2026","Sun Sep 13 09:39:46 UTC 2026","70","","Integration","","ApiTests","ProductsApi_RateLimit_Enforced_ByPolicy","ProductsApi_RateLimit_Enforced_ByPolicy","What: Validate API rate limiting per free-tier constraints (ApiPerMinute=20).
+Steps:
+1) Send >20 requests to /api/products within the same minute.
+Expected: At least one response has status 429 Too Many Requests."
+"passed","Sun Sep 13 09:39:46 UTC 2026","Sun Sep 13 09:39:46 UTC 2026","11","","Integration","","ApiDependenciesMiscTests","JsonRepository_UpdateDelete_ReturnsFalse_WhenUnknown","JsonRepository_UpdateDelete_ReturnsFalse_WhenUnknown","What: Json repository returns false on update/delete unknown (API dependency).
+Steps:
+1) Create repo; call Update/Delete with missing id.
+Expected: Returns false."
+"passed","Sun Sep 13 09:39:51 UTC 2026","Sun Sep 13 09:40:04 UTC 2026","13541","","UI","","CartUiTests","Cart_Decrement_Quantity_Decreases_By_One","Cart_Decrement_Quantity_Decreases_By_One","What: Decrement quantity via '-' button.
+Steps:
+1) Add two items; go to cart.
+2) Click '-' and observe quantity.
+Expected: Quantity decreases by 1."
+"passed","Sun Sep 13 09:41:16 UTC 2026","Sun Sep 13 09:41:16 UTC 2026","1","","UI","","LegalAndLocalizationControllerTests","Legal_Privacy_SetsViewData_FromOptions","Legal_Privacy_SetsViewData_FromOptions","What: Verify Privacy view receives ViewData values from options.
+Steps:
+1) Instantiate LegalController with options.
+2) Call Privacy().
+Expected: ViewData contains configured ControllerName and ContactEmail."
+"passed","Sun Sep 13 09:39:47 UTC 2026","Sun Sep 13 09:39:47 UTC 2026","55","","Integration","","SecurityAndLocalizationTests","Home_Has_CookieBanner","Home_Has_CookieBanner","What: Check presence of cookie consent banner on Home.
+Steps:
+1) GET '/'.
+Expected: HTML contains element with id 'cookie-consent'."
+"passed","Sun Sep 13 09:40:34 UTC 2026","Sun Sep 13 09:40:35 UTC 2026","1000","","UI","","CatalogUiMoreTests","Catalog_Sort_Name_Desc_Orders_Correctly","Catalog_Sort_Name_Desc_Orders_Correctly","What: Sort by name descending via UI button.
+Steps: 1) Open Home; 2) Click 'name_desc'.
+Expected: Names are in non-increasing order."
+"passed","Sun Sep 13 09:39:47 UTC 2026","Sun Sep 13 09:39:47 UTC 2026","0","","Integration","","ProductsApiBehaviorTests","ProductsApi_Etag_And_304_OnItem","ProductsApi_Etag_And_304_OnItem","What: ETag and 304 flow on item endpoint.
+Steps:
+1) GetProduct(1) to obtain ETag.
+2) Repeat with If-None-Match.
+Expected: 304 on second call."
+"passed","Sun Sep 13 09:39:46 UTC 2026","Sun Sep 13 09:39:46 UTC 2026","37","","Integration","","AppEndpointsTests","Cart_AddToCart_Redirects_To_ReturnUrl","Cart_AddToCart_Redirects_To_ReturnUrl","What: AddToCart redirects back to returnUrl when provided and local.
 Steps:
 1) Disable auto-redirect; GET '/Cart/AddToCart?id=1&returnUrl=/'
 Expected: 302 with Location header '/'."
-"passed","Sun Sep 13 09:33:31 UTC 2026","Sun Sep 13 09:33:33 UTC 2026","1392","","UI","","CartUiTests","Cart_SetQuantity_Zero_Clamps_To_One","Cart_SetQuantity_Zero_Clamps_To_One","What: Setting 0 clamps to 1 (client-side rule).
-Steps:
-1) Add item; go to cart.
-2) Set quantity to 0 and blur.
-Expected: Quantity becomes at least 1."
-"passed","Sun Sep 13 09:33:08 UTC 2026","Sun Sep 13 09:33:08 UTC 2026","67","","Integration","","ApiDependenciesHelpersTests","Currency_Eur_Formats","Currency_Eur_Formats","What: Currency.Eur produces a string with euro symbol or code (API dependency).
-Steps:
-1) Format 12.34m.
-Expected: Result contains '€' or 'EUR'."
-"passed","Sun Sep 13 09:33:18 UTC 2026","Sun Sep 13 09:33:30 UTC 2026","11535","","UI","","CartUiTests","Cart_Delete_Removes_Item_And_Empty_State","Cart_Delete_Removes_Item_And_Empty_State","What: Deleting item empties cart when single item present.
-Steps:
-1) Add item; go to cart.
-2) Click trash button.
-Expected: Cart becomes empty (info alert visible)."
-"passed","Sun Sep 13 09:34:19 UTC 2026","Sun Sep 13 09:34:19 UTC 2026","21","","UI","","HomeControllerTests","Home_Index_Default_ReturnsPagedModel","Home_Index_Default_ReturnsPagedModel","What: Verify default Index returns a paged catalog model.
+"passed","Sun Sep 13 09:41:16 UTC 2026","Sun Sep 13 09:41:16 UTC 2026","19","","UI","","HomeControllerTests","Home_Index_Default_ReturnsPagedModel","Home_Index_Default_ReturnsPagedModel","What: Verify default Index returns a paged catalog model.
 Steps:
 1) Call Index with page=1,pageSize=3.
 Expected: ViewResult with model having 3 items, total>=3, page=1."
-"passed","Sun Sep 13 09:33:09 UTC 2026","Sun Sep 13 09:33:09 UTC 2026","27","","Integration","","AppEndpointsTests","Health_And_Robots_Respond","Health_And_Robots_Respond","What: Health and robots endpoints respond.
+"passed","Sun Sep 13 09:39:47 UTC 2026","Sun Sep 13 09:39:47 UTC 2026","1","","Integration","","ProductsApiBehaviorTests","ProductsApi_Culture_Ru_Localizes_Product","ProductsApi_Culture_Ru_Localizes_Product","What: RU culture localizes product fields.
 Steps:
-1) GET '/healthz' and '/robots.txt'.
-Expected: 200."
-"passed","Sun Sep 13 09:33:08 UTC 2026","Sun Sep 13 09:33:08 UTC 2026","374","","Integration","","ApiTests","ProductsApi_GetAll_ReturnsOk_AndExpectedCount","ProductsApi_GetAll_ReturnsOk_AndExpectedCount","What: Verify /api/products returns 200 and expected number of items.
+1) Call GetProduct(1, culture='ru').
+Expected: Name differs from known English 'Coder\'s Comfort'."
+"passed","Sun Sep 13 09:39:47 UTC 2026","Sun Sep 13 09:39:47 UTC 2026","1","","Integration","","MiddlewareTests","Middleware_FreeTier_BlockAll_Returns503_ExceptAllowlisted","Middleware_FreeTier_BlockAll_Returns503_ExceptAllowlisted","What: Verify FreeTierGuardMiddleware blocks all except allowlisted paths.
 Steps:
-1) Issue GET /api/products (via HttpClient or RestClient).
-2) Deserialize response to list of Sock.
-Expected: HTTP 200; list is not null; count equals 8."
-"passed","Sun Sep 13 09:33:09 UTC 2026","Sun Sep 13 09:33:09 UTC 2026","5","","Unit","","CheckoutControllerUnitFlowTests","Checkout_PostIndex_Valid_StoresDraft_AndRedirects","Checkout_PostIndex_Valid_StoresDraft_AndRedirects","What: Valid post stores OrderDraft in session and redirects to Review.
+1) Configure options: Enabled=true, BlockAllTraffic=true, AllowPaths=['/healthz'].
+2) Call middleware for '/' and '/healthz'.
+Expected: '/' returns 503; '/healthz' passes to next."
+"passed","Sun Sep 13 09:40:19 UTC 2026","Sun Sep 13 09:40:20 UTC 2026","988","","UI","","CatalogUiMoreTests","Catalog_Click_Image_Opens_Details","Catalog_Click_Image_Opens_Details","What: Click on product image opens details page.
+Steps:
+1) Click image in first card.
+Expected: URL contains '/Products/Details'."
+"passed","Sun Sep 13 09:39:47 UTC 2026","Sun Sep 13 09:39:47 UTC 2026","8","","Unit","","CheckoutControllerUnitFlowTests","Checkout_PostIndex_Valid_StoresDraft_AndRedirects","Checkout_PostIndex_Valid_StoresDraft_AndRedirects","What: Valid post stores OrderDraft in session and redirects to Review.
 Steps:
 1) Put one item to session cart.
 2) Post valid model.
 Expected: Redirect to Review; 'OrderDraft' exists in session."
-"passed","Sun Sep 13 09:33:09 UTC 2026","Sun Sep 13 09:33:09 UTC 2026","0","","Unit","","ProductCatalogLocalizerTests","Localizer_Single_English_Default_NoChange","Localizer_Single_English_Default_NoChange","What: Verify EN localization leaves product unchanged.
+"passed","Sun Sep 13 09:39:47 UTC 2026","Sun Sep 13 09:39:47 UTC 2026","0","","Unit","","CartControllerNavigationUnitTests","Cart_AddToCart_LocalReturnUrl_Redirects","Cart_AddToCart_LocalReturnUrl_Redirects","What: When returnUrl is local, AddToCart redirects there.
 Steps:
-1) Create English sock.
-2) Localize with 'en'.
-Expected: Name equals original English name."
-"passed","Sun Sep 13 09:33:09 UTC 2026","Sun Sep 13 09:33:09 UTC 2026","0","","Unit","","LegalAndLocalizationUnitTests","Localization_Set_WritesCookie_AndRedirects_Local","Localization_Set_WritesCookie_AndRedirects_Local","What: Verify Localization.Set writes culture cookie and local redirects.
+1) Call AddToCart with returnUrl='/?q=x'.
+Expected: LocalRedirect to '/?q=x'."
+"passed","Sun Sep 13 09:39:47 UTC 2026","Sun Sep 13 09:39:47 UTC 2026","26","","Integration","","AppEndpointsTests","Status_Endpoint_AllowsOnly_Allowlist","Status_Endpoint_AllowsOnly_Allowlist","What: Status endpoint is IP-restricted.
 Steps:
-1) Call Set('ru-RU','/').
-Expected: Response Set-Cookie contains .AspNetCore.Culture; LocalRedirect result."
-"passed","Sun Sep 13 09:34:17 UTC 2026","Sun Sep 13 09:34:18 UTC 2026","1093","","UI","","HeaderFooterUiTests","HeaderCartSummary_Updates_OnAdd","HeaderCartSummary_Updates_OnAdd","What: Cart summary updates near header icon.
+1) GET '/_status'.
+Expected: 200 JSON on allowlist or 403 otherwise."
+"passed","Sun Sep 13 09:39:47 UTC 2026","Sun Sep 13 09:39:47 UTC 2026","1","","Integration","","ProductsApiControllerTests","ProductsApi_GetById_Returns304_OnIfModifiedSince","ProductsApi_GetById_Returns304_OnIfModifiedSince","What: Validate If-Modified-Since behavior for GetProduct.
 Steps:
-1) Read counter and total.
-2) Add item from catalog.
-Expected: Counter or total changes (increments)."
-"passed","Sun Sep 13 09:33:09 UTC 2026","Sun Sep 13 09:33:09 UTC 2026","1","","Integration","","MiddlewareTests","Middleware_SecurityHeaders_AddsCoreHeaders","Middleware_SecurityHeaders_AddsCoreHeaders","What: Ensure SecurityHeadersMiddleware adds core security headers and CSP nonce.
+1) First call to obtain Last-Modified.
+2) Second call with If-Modified-Since header.
+Expected: Status is either 200 or 304 (environment dependent)."
+"passed","Sun Sep 13 09:39:47 UTC 2026","Sun Sep 13 09:39:47 UTC 2026","3","","Integration","","MiddlewareTests","Middleware_ConcurrencyLimiter_Returns429_WhenSaturated","Middleware_ConcurrencyLimiter_Returns429_WhenSaturated","What: Ensure ConcurrencyLimiterMiddleware returns 429 when saturated.
 Steps:
-1) Invoke middleware with a fresh HttpContext.
-Expected: Response contains CSP header; X-Frame-Options is DENY; a nonce is stored in HttpContext.Items."
-"passed","Sun Sep 13 09:33:10 UTC 2026","Sun Sep 13 09:33:10 UTC 2026","35","","Integration","","SecurityAndLocalizationTests","Products_Details_Localized_RU","Products_Details_Localized_RU","What: Ensure RU culture cookie affects product details localization.
+1) Set MaxConcurrentRequests=1; hold first request.
+2) Start second request.
+Expected: Second returns 429 Too Many Requests."
+"passed","Sun Sep 13 09:40:20 UTC 2026","Sun Sep 13 09:40:21 UTC 2026","1354","","UI","","CatalogUiMoreTests","Catalog_Price_Boundary_Equals_ItemPrice","Catalog_Price_Boundary_Equals_ItemPrice","What: Price boundary equals to one product's price.
 Steps:
-1) GET '/Products/Details/1' with '.AspNetCore.Culture=c=ru|uic=ru'.
-Expected: The page contains Russian localized strings."
-"passed","Sun Sep 13 09:33:09 UTC 2026","Sun Sep 13 09:33:09 UTC 2026","0","","Unit","","RequestMetricsCountersTests","RequestMetrics_Increments_Counters_ByStatus","RequestMetrics_Increments_Counters_ByStatus","What: Verify counters increment for 2xx, 429 and 503 statuses.
+1) Read first visible product price; set min=max=that price; Apply.
+Expected: Visible products have that price only (<= page size)."
+"passed","Sun Sep 13 09:39:47 UTC 2026","Sun Sep 13 09:39:47 UTC 2026","1","","Unit","","CartControllerUnitTests","CartController_SetQuantity_Zero_Removes","CartController_SetQuantity_Zero_Removes","What: Setting quantity to zero removes item in CartController.
+Steps:
+1) Add id=1; SetQuantity(1,0).
+Expected: Cart becomes empty."
+"passed","Sun Sep 13 09:40:16 UTC 2026","Sun Sep 13 09:40:17 UTC 2026","1314","","UI","","CartUiTests","Cart_Increment_Quantity_Increases_By_One","Cart_Increment_Quantity_Increases_By_One","What: Increment quantity via '+' button.
+Steps:
+1) Add item; go to cart.
+2) Click '+' and observe quantity.
+Expected: Quantity increases by 1."
+"passed","Sun Sep 13 09:39:46 UTC 2026","Sun Sep 13 09:39:46 UTC 2026","36","","Integration","","ApiDependenciesHelpersTests","Currency_Eur_Formats","Currency_Eur_Formats","What: Currency.Eur produces a string with euro symbol or code (API dependency).
+Steps:
+1) Format 12.34m.
+Expected: Result contains '€' or 'EUR'."
+"passed","Sun Sep 13 09:41:16 UTC 2026","Sun Sep 13 09:41:16 UTC 2026","3","","UI","","ProductsControllerTests","Products_Details_ReturnsNotFound_WhenMissing","Products_Details_ReturnsNotFound_WhenMissing","What: Verify 'Details' returns NotFound for a missing product.
+Steps:
+1) Call Details with invalid id (-1).
+Expected: NotFoundResult."
+"passed","Sun Sep 13 09:39:46 UTC 2026","Sun Sep 13 09:39:46 UTC 2026","4","","Integration","","ApiDependenciesMiscTests","RequestMetrics_Snapshot","RequestMetrics_Snapshot","What: RequestMetrics snapshot fields present (API dependency).
+Steps:
+1) Record samples; read snapshot.
+Expected: counts.ok>0; latency_ms.samples>0."
+"passed","Sun Sep 13 09:39:47 UTC 2026","Sun Sep 13 09:39:47 UTC 2026","0","","Unit Tests","","SessionHelperTests","SessionHelpers_SetAndGet_SerializesShoppingCart","SessionHelpers_SetAndGet_SerializesShoppingCart","What: Verify session Set/Get helpers serialize ShoppingCart.
+Steps:
+1) Create cart with two items; session.Set(""Cart"", cart).
+2) session.Get<ShoppingCart>(""Cart"").
+Expected: Not null; total items equals 2."
+"passed","Sun Sep 13 09:39:46 UTC 2026","Sun Sep 13 09:39:47 UTC 2026","102","","Integration","","AppEndpointsTests","Home_Returns_Ok_With_Html","Home_Returns_Ok_With_Html","What: Verify home page returns 200 and has HTML content.
+Steps:
+1) GET '/'.
+Expected: 200 OK, text/html content type."
+"passed","Sun Sep 13 09:41:00 UTC 2026","Sun Sep 13 09:41:00 UTC 2026","853","","UI","","CatalogUiTests","Catalog_Sort_Price_Desc_Orders_Correctly","Catalog_Sort_Price_Desc_Orders_Correctly","What: Sort by price descending.
+Steps:
+1) Open home with sort=price_desc.
+Expected: Visible prices are in non-increasing order."
+"passed","Sun Sep 13 09:39:47 UTC 2026","Sun Sep 13 09:39:47 UTC 2026","1","","Integration","","ProductsApiBehaviorTests","ProductsApi_Sort_NameDesc_And_PriceAsc","ProductsApi_Sort_NameDesc_And_PriceAsc","What: Verify sort by name_desc and price_asc produce correct ordering.
+Steps:
+1) Call sort='name_desc'.
+2) Call sort='price_asc'.
+Expected: Lists are ordered accordingly."
+"passed","Sun Sep 13 09:40:17 UTC 2026","Sun Sep 13 09:40:19 UTC 2026","1449","","UI","","CartUiTests","Cart_SetQuantity_Zero_Clamps_To_One","Cart_SetQuantity_Zero_Clamps_To_One","What: Setting 0 clamps to 1 (client-side rule).
+Steps:
+1) Add item; go to cart.
+2) Set quantity to 0 and blur.
+Expected: Quantity becomes at least 1."
+"passed","Sun Sep 13 09:39:47 UTC 2026","Sun Sep 13 09:39:47 UTC 2026","1","","Unit","","RequestMetricsCountersTests","RequestMetrics_Increments_Counters_ByStatus","RequestMetrics_Increments_Counters_ByStatus","What: Verify counters increment for 2xx, 429 and 503 statuses.
 Steps:
 1) Record multiple samples with different status codes.
 2) Snapshot counts.
 Expected: ok>0; too_many>0; unavailable>0."
-"passed","Sun Sep 13 09:33:34 UTC 2026","Sun Sep 13 09:33:35 UTC 2026","1268","","UI","","CatalogUiMoreTests","Catalog_Price_Boundary_Equals_ItemPrice","Catalog_Price_Boundary_Equals_ItemPrice","What: Price boundary equals to one product's price.
+"passed","Sun Sep 13 09:41:16 UTC 2026","Sun Sep 13 09:41:16 UTC 2026","0","","UI","","ProductsControllerTests","Products_Details_ReturnsView_WithSockModel","Products_Details_ReturnsView_WithSockModel","What: Verify 'Details' returns a view with a Sock model for a valid id.
 Steps:
-1) Read first visible product price; set min=max=that price; Apply.
-Expected: Visible products have that price only (<= page size)."
-"passed","Sun Sep 13 09:33:09 UTC 2026","Sun Sep 13 09:33:09 UTC 2026","1","","Unit","","ProductsApiControllerUnitTests","Api_GetProduct_Json_And_304_OnEtag","Api_GetProduct_Json_And_304_OnEtag","What: Validate GetProduct returns JSON and honors 304 via ETag.
+1) Call Details with id=1.
+Expected: ViewResult with model of type Sock."
+"passed","Sun Sep 13 09:39:47 UTC 2026","Sun Sep 13 09:39:47 UTC 2026","53","","Integration","","AppEndpointsTests","Localization_Set_Redirects_And_Applies","Localization_Set_Redirects_And_Applies","What: Localization.Set switches UI culture and redirects locally.
 Steps:
-1) Call GetProduct(1) to obtain ETag.
-2) Call again with If-None-Match.
-Expected: First returns 200 JSON; second sets 304."
-"passed","Sun Sep 13 09:33:09 UTC 2026","Sun Sep 13 09:33:09 UTC 2026","0","","Integration","","ProductsApiBehaviorTests","ProductsApi_EmptyResult_And_CacheHeaders","ProductsApi_EmptyResult_And_CacheHeaders","What: Empty result on improbable query and proper cache headers.
-Steps:
-1) Call with q='__no_such_item__'.
-Expected: 200 JSON, empty array, Cache-Control present."
-"passed","Sun Sep 13 09:33:09 UTC 2026","Sun Sep 13 09:33:09 UTC 2026","0","","Unit","","LegalAndLocalizationUnitTests","Localization_Set_NonLocalUrl_FallsBackToHome","Localization_Set_NonLocalUrl_FallsBackToHome","What: Non-local returnUrl should fallback to Home/Index.
-Steps:
-1) Call Set('en','http://evil.com').
-Expected: LocalRedirect to '/'."
-"passed","Sun Sep 13 09:33:09 UTC 2026","Sun Sep 13 09:33:09 UTC 2026","38","","Integration","","SecurityAndLocalizationTests","Home_Csp_ContainsNonce","Home_Csp_ContainsNonce","What: Verify CSP header contains a per-request nonce on Home.
-Steps:
-1) GET '/'.
-Expected: 'Content-Security-Policy' header exists and contains ""script-src 'self' 'nonce-...'""."
-"passed","Sun Sep 13 09:33:08 UTC 2026","Sun Sep 13 09:33:08 UTC 2026","1","","Integration","","ApiDependenciesControllersSmokeTests","LegalController_Privacy_Smoke","LegalController_Privacy_Smoke","What: LegalController Privacy returns view (API dependency).
-Steps:
-1) Call Privacy().
-Expected: ViewResult."
-"passed","Sun Sep 13 09:33:09 UTC 2026","Sun Sep 13 09:33:09 UTC 2026","209","","Unit","","CheckoutControllerUnitFlowTests","Checkout_Confirm_Finalizes_And_Clears","Checkout_Confirm_Finalizes_And_Clears","What: Confirm finalizes order, clears cart, clears draft, and redirects to ThankYou.
-Steps:
-1) Seed draft and cart in session.
-2) Call Confirm().
-Expected: Redirect to ThankYou; 'LastOrder' set; Cart cleared."
-"passed","Sun Sep 13 09:33:35 UTC 2026","Sun Sep 13 09:33:36 UTC 2026","1077","","UI","","CatalogUiMoreTests","Catalog_Price_MinGreaterThanMax_Handled","Catalog_Price_MinGreaterThanMax_Handled","What: Min greater than Max should lead to empty or unchanged list (implementation-dependent).
-Steps:
-1) Set min=10, max=5; Apply.
-Expected: Either 'NoItems' alert or fewer cards."
-"passed","Sun Sep 13 09:33:09 UTC 2026","Sun Sep 13 09:33:09 UTC 2026","1","","Integration","","ProductsApiBehaviorTests","ProductsApi_304_On_IfModifiedSince_List","ProductsApi_304_On_IfModifiedSince_List","What: If-Modified-Since forces 304 on list when unchanged.
-Steps:
-1) First call to capture Last-Modified.
-2) Second call with If-Modified-Since set to same value.
-Expected: 304."
-"passed","Sun Sep 13 09:33:09 UTC 2026","Sun Sep 13 09:33:09 UTC 2026","44","","Integration","","AppEndpointsTests","Cart_AddToCart_FallsBack_To_Referer","Cart_AddToCart_FallsBack_To_Referer","What: Cart redirect path falls back to Referer when present and safe.
-Steps:
-1) GET '/Cart/AddToCart?id=1' with Referer '/Products/Details/1' (no auto-redirect).
-Expected: 302 to '/Products/Details/1'."
-"passed","Sun Sep 13 09:33:09 UTC 2026","Sun Sep 13 09:33:09 UTC 2026","0","","Integration","","ProductsApiBehaviorTests","ProductsApi_GetById_NotFound_ForUnknown","ProductsApi_GetById_NotFound_ForUnknown","What: Unknown product id returns 404.
-Steps:
-1) Call GetProduct(-1).
-Expected: NotFound."
-"passed","Sun Sep 13 09:33:09 UTC 2026","Sun Sep 13 09:33:09 UTC 2026","1","","Unit","","ProductsApiControllerUnitTests","Api_GetAllProducts_Returns304_OnConditionalRequests","Api_GetAllProducts_Returns304_OnConditionalRequests","What: Validate 304 handling via If-None-Match/If-Modified-Since for GetAllProducts.
+1) POST '/Localization/Set' with culture=ru and returnUrl='/' (no auto-redirect).
+2) Follow up GET '/' and check content contains some cyrillic letter.
+Expected: 302 redirect; subsequent page contains Cyrillic text."
+"passed","Sun Sep 13 09:39:47 UTC 2026","Sun Sep 13 09:39:47 UTC 2026","0","","Unit","","ProductsApiControllerUnitTests","Api_GetAllProducts_Returns304_OnConditionalRequests","Api_GetAllProducts_Returns304_OnConditionalRequests","What: Validate 304 handling via If-None-Match/If-Modified-Since for GetAllProducts.
 Steps:
 1) First call to obtain ETag/Last-Modified.
 2) Second call with If-None-Match -> 304.
 3) Third call with If-Modified-Since -> 304.
 Expected: Response.StatusCode equals 304."
-"passed","Sun Sep 13 09:33:08 UTC 2026","Sun Sep 13 09:33:08 UTC 2026","5","","Integration","","ApiDependenciesMiddlewareTests","SecurityHeaders_AddsCoreHeaders","SecurityHeaders_AddsCoreHeaders","What: Verify SecurityHeaders middleware behavior (API dependency).
+"passed","Sun Sep 13 09:39:47 UTC 2026","Sun Sep 13 09:39:47 UTC 2026","362","","Unit","","CheckoutControllerUnitFlowTests","Checkout_Confirm_Finalizes_And_Clears","Checkout_Confirm_Finalizes_And_Clears","What: Confirm finalizes order, clears cart, clears draft, and redirects to ThankYou.
 Steps:
-1) Invoke with new HttpContext.
-Expected: CSP header and nonce present; X-Frame-Options=DENY."
-"passed","Sun Sep 13 09:33:09 UTC 2026","Sun Sep 13 09:33:09 UTC 2026","0","","Integration","","ProductsApiBehaviorTests","ProductsApi_Item_SetsCachingHeaders","ProductsApi_Item_SetsCachingHeaders","What: Item endpoint sets caching headers.
-Steps:
-1) Call GetProduct(1).
-Expected: ETag and Last-Modified present."
-"passed","Sun Sep 13 09:33:08 UTC 2026","Sun Sep 13 09:33:08 UTC 2026","4","","Integration","","ApiDependenciesMiddlewareTests","FreeTier_BlockAll_ExceptAllowlisted","FreeTier_BlockAll_ExceptAllowlisted","What: FreeTier guard blocks except allowlisted (API dependency).
-Steps:
-1) Enabled=true, BlockAll=true, AllowPaths=['/healthz'].
-Expected: '/' -> 503; '/healthz' passes."
-"passed","Sun Sep 13 09:33:09 UTC 2026","Sun Sep 13 09:33:09 UTC 2026","0","","Unit","","LegalAndLocalizationUnitTests","Legal_Terms_SetsViewData_FromOptions","Legal_Terms_SetsViewData_FromOptions","What: Verify Legal.Terms populates ViewData from options.
-Steps:
-1) Instantiate LegalController with options.
-2) Call Terms().
-Expected: ViewData contains configured ControllerName and ContactEmail."
-"passed","Sun Sep 13 09:33:09 UTC 2026","Sun Sep 13 09:33:09 UTC 2026","2","","Integration","","MiddlewareTests","Middleware_FreeTier_BlockAll_Returns503_ExceptAllowlisted","Middleware_FreeTier_BlockAll_Returns503_ExceptAllowlisted","What: Verify FreeTierGuardMiddleware blocks all except allowlisted paths.
-Steps:
-1) Configure options: Enabled=true, BlockAllTraffic=true, AllowPaths=['/healthz'].
-2) Call middleware for '/' and '/healthz'.
-Expected: '/' returns 503; '/healthz' passes to next."
-"passed","Sun Sep 13 09:34:06 UTC 2026","Sun Sep 13 09:34:17 UTC 2026","10957","","UI","","HeaderFooterUiTests","HeaderCartLink_NavigatesToCart","HeaderCartLink_NavigatesToCart","What: Clicking header cart link navigates to cart page.
-Steps:
-1) Click cart icon.
-Expected: URL contains '/Cart'."
-"passed","Sun Sep 13 09:34:19 UTC 2026","Sun Sep 13 09:34:19 UTC 2026","1","","UI","","LegalAndLocalizationControllerTests","Legal_Privacy_SetsViewData_FromOptions","Legal_Privacy_SetsViewData_FromOptions","What: Verify Privacy view receives ViewData values from options.
-Steps:
-1) Instantiate LegalController with options.
-2) Call Privacy().
-Expected: ViewData contains configured ControllerName and ContactEmail."
-"passed","Sun Sep 13 09:33:09 UTC 2026","Sun Sep 13 09:33:09 UTC 2026","45","","Integration","","SecurityAndLocalizationTests","Home_Has_CookieBanner","Home_Has_CookieBanner","What: Check presence of cookie consent banner on Home.
-Steps:
-1) GET '/'.
-Expected: HTML contains element with id 'cookie-consent'."
-"passed","Sun Sep 13 09:33:09 UTC 2026","Sun Sep 13 09:33:09 UTC 2026","1","","Integration","","ProductsApiControllerTests","ProductsApi_GetAll_SetsCachingHeaders_AndReturnsJson","ProductsApi_GetAll_SetsCachingHeaders_AndReturnsJson","What: Verify GET /api/products returns JSON and sets caching headers.
-Steps:
-1) Call controller GetAllProducts.
-2) Inspect ContentResult and response headers.
-Expected: Content-Type starts with application/json; ETag, Last-Modified and Cache-Control present; X-Total-Count is numeric."
-"passed","Sun Sep 13 09:33:09 UTC 2026","Sun Sep 13 09:33:09 UTC 2026","0","","Unit","","ModelsAndOptionsTests","ErrorViewModel_ShowRequestId_ReflectsRequestId","ErrorViewModel_ShowRequestId_ReflectsRequestId","What: Verify ShowRequestId reflects whether RequestId is set.
-Steps:
-1) Create ErrorViewModel with null and non-null RequestId.
-Expected: null => false; non-null => true."
-"passed","Sun Sep 13 09:33:08 UTC 2026","Sun Sep 13 09:33:08 UTC 2026","55","","Integration","","ApiDependenciesHelpersTests","SessionHelper_Serializes_ShoppingCart","SessionHelper_Serializes_ShoppingCart","What: SessionHelper serializes and deserializes ShoppingCart (API dependency).
-Steps:
-1) Create cart with 2 items; Set/Get via session.
-Expected: Deserialized not null and item count equals 2."
-"passed","Sun Sep 13 09:33:09 UTC 2026","Sun Sep 13 09:33:09 UTC 2026","0","","Integration","","ProductsApiBehaviorTests","ProductsApi_Etag_And_304_OnItem","ProductsApi_Etag_And_304_OnItem","What: ETag and 304 flow on item endpoint.
-Steps:
-1) GetProduct(1) to obtain ETag.
-2) Repeat with If-None-Match.
-Expected: 304 on second call."
-"passed","Sun Sep 13 09:33:09 UTC 2026","Sun Sep 13 09:33:09 UTC 2026","1","","Unit","","ModelsAndOptionsTests","LegalOptions_Defaults_AreNotEmpty","LegalOptions_Defaults_AreNotEmpty","What: Verify default LegalOptions fields are not empty.
-Steps:
-1) Instantiate LegalOptions.
-Expected: ControllerName and ContactEmail are not empty."
-"passed","Sun Sep 13 09:33:09 UTC 2026","Sun Sep 13 09:33:09 UTC 2026","1","","Unit","","OrderTests","Total_Sums_OrderItem_Subtotals","Total_Sums_OrderItem_Subtotals",""
-"passed","Sun Sep 13 09:33:09 UTC 2026","Sun Sep 13 09:33:09 UTC 2026","5","","Unit","","CheckoutControllerUnitFlowTests","Checkout_GetIndex_ReturnsView","Checkout_GetIndex_ReturnsView","What: Verify GET /Checkout returns a view with default model.
-Steps:
-1) Call Index().
-Expected: ViewResult with CheckoutViewModel."
-"passed","Sun Sep 13 09:33:09 UTC 2026","Sun Sep 13 09:33:09 UTC 2026","44","","Integration","","AppEndpointsTests","Products_Details_Returns_Ok","Products_Details_Returns_Ok","What: Product details page returns 200.
-Steps:
-1) GET '/Products/Details/1'.
-Expected: 200 OK."
-"passed","Sun Sep 13 09:33:09 UTC 2026","Sun Sep 13 09:33:09 UTC 2026","1","","Integration","","ProductsApiBehaviorTests","ProductsApi_Filter_MinOnly_And_MaxOnly","ProductsApi_Filter_MinOnly_And_MaxOnly","What: Verify min-only and max-only price filters.
-Steps:
-1) Call with minPrice only.
-2) Call with maxPrice only.
-Expected: All items satisfy respective bounds."
-"passed","Sun Sep 13 09:33:08 UTC 2026","Sun Sep 13 09:33:08 UTC 2026","1","","Integration","","ApiDependenciesRepoAndServiceTests","ProductCatalogLocalizer_RU_EN","ProductCatalogLocalizer_RU_EN","What: Catalog localizer EN/RU (API dependency).
-Steps:
-1) Localize list with 'ru' and 'en'.
-Expected: RU modifies name; EN leaves it."
-"passed","Sun Sep 13 09:33:09 UTC 2026","Sun Sep 13 09:33:09 UTC 2026","1","","Integration","","ProductsApiBehaviorTests","ProductsApi_Paging_Works_AcrossPages","ProductsApi_Paging_Works_AcrossPages","What: Verify paging splits items across pages with default sort.
-Steps:
-1) Call page=1,pageSize=3 and page=2,pageSize=3.
-Expected: Both pages return <=3 items; first elements differ."
-"passed","Sun Sep 13 09:33:09 UTC 2026","Sun Sep 13 09:33:09 UTC 2026","1","","Unit","","ProductsAndHomeUnitTests","Products_Details_NotFound_And_View","Products_Details_NotFound_And_View","What: ProductsController.Details returns NotFound for missing id and view for valid id.
-Steps:
-1) Call Details(-1) -> NotFound.
-2) Call Details(1) -> ViewResult with model."
-"passed","Sun Sep 13 09:33:09 UTC 2026","Sun Sep 13 09:33:09 UTC 2026","2","","Unit","","CartControllerUnitTests","CartController_AddRemoveDeleteClear_Workflow","CartController_AddRemoveDeleteClear_Workflow","What: Validate CartController add/remove/delete/clear workflow.
-Steps:
-1) Ensure empty cart; add id=1 twice.
-2) Remove one; delete remaining; then clear after adding another.
-Expected: Counts reflect operations; ends empty."
-"passed","Sun Sep 13 09:34:19 UTC 2026","Sun Sep 13 09:34:19 UTC 2026","6","","UI","","LegalAndLocalizationControllerTests","Localization_Set_WritesCookie_AndRedirects","Localization_Set_WritesCookie_AndRedirects","What: Verify Localization.Set writes culture cookie and redirects locally.
-Steps:
-1) Call Set('ru','/').
-Expected: Response 'Set-Cookie' contains .AspNetCore.Culture; LocalRedirect result."
-"passed","Sun Sep 13 09:33:09 UTC 2026","Sun Sep 13 09:33:09 UTC 2026","1","","Unit","","CheckoutControllerUnitFlowTests","Checkout_Review_Behaves_AsExpected","Checkout_Review_Behaves_AsExpected","What: Review returns view when draft exists; otherwise redirects to Index.
-Steps:
-1) Without draft -> redirect.
-2) With draft -> view.
-Expected: Behaviors as described."
-"passed","Sun Sep 13 09:33:09 UTC 2026","Sun Sep 13 09:33:09 UTC 2026","0","","Integration","","ProductsApiControllerTests","ProductsApi_GetAll_Respects_IfNoneMatch_Returns304","ProductsApi_GetAll_Respects_IfNoneMatch_Returns304","What: Validate If-None-Match behavior for GetAllProducts.
-Steps:
-1) First call to obtain ETag.
-2) Second call with If-None-Match header.
-Expected: ETag is stable; status is either 200 or 304 (environment dependent)."
-"passed","Sun Sep 13 09:33:09 UTC 2026","Sun Sep 13 09:33:09 UTC 2026","1","","Integration","","ProductsApiBehaviorTests","ProductsApi_Culture_Ru_Localizes_Product","ProductsApi_Culture_Ru_Localizes_Product","What: RU culture localizes product fields.
-Steps:
-1) Call GetProduct(1, culture='ru').
-Expected: Name differs from known English 'Coder\'s Comfort'."
-"passed","Sun Sep 13 09:33:08 UTC 2026","Sun Sep 13 09:33:09 UTC 2026","39","","Integration","","ApiTests","ProductsApi_RateLimit_ReturnsJson_WhenAcceptJson","ProductsApi_RateLimit_ReturnsJson_WhenAcceptJson","What: When client sends Accept: application/json and exceeds API rate limit, the 429 response is JSON.
-Steps:
-1) Issue > ApiPerMinute requests to /api/products with Accept=application/json.
-Expected: Receive 429 Too Many Requests with application/json body containing 'error' and 'message'."
-"passed","Sun Sep 13 09:33:08 UTC 2026","Sun Sep 13 09:33:08 UTC 2026","28","","Integration","","ApiDependenciesMiddlewareTests","ConcurrencyLimiter_Returns429_WhenSaturated","ConcurrencyLimiter_Returns429_WhenSaturated","What: Concurrency limiter returns 429 when saturated (API dependency).
+1) Seed draft and cart in session.
+2) Call Confirm().
+Expected: Redirect to ThankYou; 'LastOrder' set; Cart cleared."
+"passed","Sun Sep 13 09:40:33 UTC 2026","Sun Sep 13 09:40:34 UTC 2026","1034","","UI","","CatalogUiMoreTests","Catalog_Sort_Name_Asc_Orders_Correctly","Catalog_Sort_Name_Asc_Orders_Correctly","What: Sort by name ascending via UI button.
+Steps: 1) Open Home; 2) Click 'name_asc'.
+Expected: Names are in non-decreasing order."
+"passed","Sun Sep 13 09:39:46 UTC 2026","Sun Sep 13 09:39:46 UTC 2026","29","","Integration","","ApiDependenciesMiddlewareTests","ConcurrencyLimiter_Returns429_WhenSaturated","ConcurrencyLimiter_Returns429_WhenSaturated","What: Concurrency limiter returns 429 when saturated (API dependency).
 Steps:
 1) MaxConcurrentRequests=1; hold first request; invoke second.
 Expected: Second response status is 429."
-"passed","Sun Sep 13 09:33:08 UTC 2026","Sun Sep 13 09:33:08 UTC 2026","1","","Integration","","ApiDependenciesRepoAndServiceTests","LegacyRepository_Basics","LegacyRepository_Basics","What: Legacy repository basic behaviors (API dependency).
+"passed","Sun Sep 13 09:40:58 UTC 2026","Sun Sep 13 09:41:00 UTC 2026","1424","","UI","","CatalogUiTests","Catalog_LazyLoad_Increases_CardCount_When_Available","Catalog_LazyLoad_Increases_CardCount_When_Available","What: Lazy-load adds more items when available.
 Steps:
-1) GetAllSocks -> count>=8.
-2) GetSockById(1) not null; (-1) null."
-"passed","Sun Sep 13 09:33:09 UTC 2026","Sun Sep 13 09:33:09 UTC 2026","0","","Unit","","MiddlewareUnitTests","Middleware_SecurityHeaders_AddsCoreHeaders","Middleware_SecurityHeaders_AddsCoreHeaders","What: Ensure SecurityHeadersMiddleware adds core security headers and nonce.
+1) Open home; click 'Load more' (if present).
+Expected: Card count increases or stays if already all loaded."
+"passed","Sun Sep 13 09:39:46 UTC 2026","Sun Sep 13 09:39:46 UTC 2026","2","","Integration","","ApiDependenciesMiscTests","ProductRepository_Static_Basics","ProductRepository_Static_Basics","What: Static ProductRepository returns items (API dependency).
 Steps:
-1) Invoke middleware with a fresh HttpContext.
-Expected: CSP header present; nonce stored; X-Frame-Options=DENY."
-"passed","Sun Sep 13 09:34:04 UTC 2026","Sun Sep 13 09:34:05 UTC 2026","1074","","UI","","CatalogUiTests","Details_AddToCart_IncrementsCounter","Details_AddToCart_IncrementsCounter","What: Add to cart from product details.
+1) Call GetAllSocks; GetSockById(1).
+Expected: Non-empty list; non-null item for id=1."
+"passed","Sun Sep 13 09:39:47 UTC 2026","Sun Sep 13 09:39:47 UTC 2026","1","","Integration","","ProductsApiBehaviorTests","ProductsApi_EmptyResult_And_CacheHeaders","ProductsApi_EmptyResult_And_CacheHeaders","What: Empty result on improbable query and proper cache headers.
 Steps:
-1) Open first product details; click Add to Cart.
-2) Verify header cart counter increments.
-Expected: Counter increases by 1."
-"passed","Sun Sep 13 09:33:09 UTC 2026","Sun Sep 13 09:33:09 UTC 2026","0","","Unit","","CartControllerNavigationUnitTests","Cart_AddToCart_RefererFallback_Behaves","Cart_AddToCart_RefererFallback_Behaves","What: When Referer points to product page, AddToCart redirects back; if from Cart, goes Home.
+1) Call with q='__no_such_item__'.
+Expected: 200 JSON, empty array, Cache-Control present."
+"passed","Sun Sep 13 09:39:47 UTC 2026","Sun Sep 13 09:39:47 UTC 2026","36","","Integration","","SecurityAndLocalizationTests","Products_Details_Localized_RU","Products_Details_Localized_RU","What: Ensure RU culture cookie affects product details localization.
 Steps:
-1) Set Referer to '/Products/Details/1' -> LocalRedirect to that path.
-2) Set Referer to '/Cart' -> RedirectToAction Home/Index.
-Expected: Behaviors as described."
-"passed","Sun Sep 13 09:33:09 UTC 2026","Sun Sep 13 09:33:09 UTC 2026","25","","Integration","","AppEndpointsTests","Status_Endpoint_AllowsOnly_Allowlist","Status_Endpoint_AllowsOnly_Allowlist","What: Status endpoint is IP-restricted.
-Steps:
-1) GET '/_status'.
-Expected: 200 JSON on allowlist or 403 otherwise."
-"passed","Sun Sep 13 09:33:09 UTC 2026","Sun Sep 13 09:33:09 UTC 2026","2","","Unit","","ProductsApiControllerUnitTests","Api_GetAllProducts_ReturnsJson_WithCachingHeaders","Api_GetAllProducts_ReturnsJson_WithCachingHeaders","What: Cover filtering/sorting/paging for GetAllProducts and validate headers.
-Steps:
-1) Call GetAllProducts with q/min/max/sort/culture.
-2) Capture ETag and Last-Modified headers.
-Expected: ContentResult JSON; headers present."
-"passed","Sun Sep 13 09:34:22 UTC 2026","Sun Sep 13 09:34:23 UTC 2026","966","","UI","","ProductUiTests","ProductDetails_DisplaysKeyElements","ProductDetails_DisplaysKeyElements","What: Product details page shows key elements.
-Steps:
-1) Open first product details.
-Expected: Image, name, description, price, 'Add to Cart', 'Back to Catalog' visible."
-"passed","Sun Sep 13 09:33:08 UTC 2026","Sun Sep 13 09:33:08 UTC 2026","0","","Integration","","ApiDependenciesHelpersTests","ErrorViewModel_ShowRequestId_Works","ErrorViewModel_ShowRequestId_Works","What: ErrorViewModel.ShowRequestId reflects RequestId (API dependency).
-Steps:
-1) Set null and non-null request id.
-Expected: ShowRequestId false then true."
-"passed","Sun Sep 13 09:33:09 UTC 2026","Sun Sep 13 09:33:09 UTC 2026","3","","Integration","","JsonProductRepositoryTests","JsonRepository_CreateAddUpdateDelete_Works","JsonRepository_CreateAddUpdateDelete_Works","What: Validate JSON repository CRUD flow.
-Steps:
-1) Create repo with temp path (seed copies legacy items).
-2) Add new sock; update its description; delete it.
-Expected: Add/Update/Delete succeed; item appears/changes/disappears accordingly."
-"passed","Sun Sep 13 09:33:09 UTC 2026","Sun Sep 13 09:33:09 UTC 2026","136","","Integration","","AppEndpointsTests","Home_Returns_Ok_With_Html","Home_Returns_Ok_With_Html","What: Verify home page returns 200 and has HTML content.
-Steps:
-1) GET '/'.
-Expected: 200 OK, text/html content type."
-"passed","Sun Sep 13 09:33:09 UTC 2026","Sun Sep 13 09:33:09 UTC 2026","1","","Unit","","CartControllerJsonUnitTests","Cart_AddToCart_ReturnsJsonAndUpdatesTotals","Cart_AddToCart_ReturnsJsonAndUpdatesTotals","What: Verify AddToCart returns JSON when Accept=application/json and updates totals.
-Steps:
-1) Prepare empty session cart and set Accept header to application/json.
-2) Call AddToCart(id=1), then call again to increment quantity.
-Expected: JSON contains totalItems=2, uniqueItems=1, totalSum>0, and item with matching id and quantity."
-"passed","Sun Sep 13 09:34:19 UTC 2026","Sun Sep 13 09:34:19 UTC 2026","1","","UI","","ProductsControllerTests","Products_Details_ReturnsView_WithSockModel","Products_Details_ReturnsView_WithSockModel","What: Verify 'Details' returns a view with a Sock model for a valid id.
-Steps:
-1) Call Details with id=1.
-Expected: ViewResult with model of type Sock."
-"passed","Sun Sep 13 09:33:09 UTC 2026","Sun Sep 13 09:33:09 UTC 2026","0","","Unit","","RequestMetricsAndHelpersTests","Currency_Eur_Returns_EuroSymbolOrCode","Currency_Eur_Returns_EuroSymbolOrCode","What: Verify Currency.Eur formats string with euro symbol or 'EUR'.
-Steps:
-1) Format 12.34m.
-Expected: Output contains '€' or 'EUR'."
-"passed","Sun Sep 13 09:33:41 UTC 2026","Sun Sep 13 09:34:02 UTC 2026","20876","","UI","","CatalogUiTests","Catalog_InvalidSearch_NoCrash","Catalog_InvalidSearch_NoCrash","What: Invalid search query should not break the page.
-Steps:
-1) Open home with q containing special characters.
-Expected: Page loads (either cards or 'NoItems' alert). No crash."
-"passed","Sun Sep 13 09:33:09 UTC 2026","Sun Sep 13 09:33:09 UTC 2026","1","","Unit","","RequestMetricsAndHelpersTests","RequestMetrics_Computes_Percentiles_AndSamples","RequestMetrics_Computes_Percentiles_AndSamples","What: Verify RequestMetrics computes percentiles and sample count.
-Steps:
-1) Record 10 samples.
-2) Read snapshot and serialize to JSON.
-Expected: ok>0; p50>0; samples==10."
-"passed","Sun Sep 13 09:33:09 UTC 2026","Sun Sep 13 09:33:09 UTC 2026","0","","Unit","","ProductsAndHomeUnitTests","Home_Privacy_ReturnsView","Home_Privacy_ReturnsView","What: Home.Privacy returns a view.
-Steps:
-1) Call Privacy().
-Expected: ViewResult."
-"passed","Sun Sep 13 09:33:36 UTC 2026","Sun Sep 13 09:33:37 UTC 2026","1177","","UI","","CatalogUiMoreTests","Catalog_Reset_Filters","Catalog_Reset_Filters","What: Reset filters and sorting.
-Steps:
-1) Apply price range; click Reset.
-Expected: Card count is restored/increases (smoke check)."
-"passed","Sun Sep 13 09:33:09 UTC 2026","Sun Sep 13 09:33:09 UTC 2026","0","","Unit","","CartControllerUnitTests","CartController_SetQuantity_Zero_Removes","CartController_SetQuantity_Zero_Removes","What: Setting quantity to zero removes item in CartController.
-Steps:
-1) Add id=1; SetQuantity(1,0).
-Expected: Cart becomes empty."
-"passed","Sun Sep 13 09:33:08 UTC 2026","Sun Sep 13 09:33:08 UTC 2026","4","","Integration","","ApiDependenciesMiscTests","RequestMetrics_Snapshot","RequestMetrics_Snapshot","What: RequestMetrics snapshot fields present (API dependency).
-Steps:
-1) Record samples; read snapshot.
-Expected: counts.ok>0; latency_ms.samples>0."
-"passed","Sun Sep 13 09:33:08 UTC 2026","Sun Sep 13 09:33:08 UTC 2026","10","","Integration","","ApiDependenciesMiscTests","JsonRepository_UpdateDelete_ReturnsFalse_WhenUnknown","JsonRepository_UpdateDelete_ReturnsFalse_WhenUnknown","What: Json repository returns false on update/delete unknown (API dependency).
-Steps:
-1) Create repo; call Update/Delete with missing id.
-Expected: Returns false."
-"passed","Sun Sep 13 09:33:09 UTC 2026","Sun Sep 13 09:33:09 UTC 2026","2","","Integration","","ProductsApiBehaviorTests","ProductsApi_Sort_NameDesc_And_PriceAsc","ProductsApi_Sort_NameDesc_And_PriceAsc","What: Verify sort by name_desc and price_asc produce correct ordering.
-Steps:
-1) Call sort='name_desc'.
-2) Call sort='price_asc'.
-Expected: Lists are ordered accordingly."
-"passed","Sun Sep 13 09:33:38 UTC 2026","Sun Sep 13 09:33:39 UTC 2026","992","","UI","","CatalogUiMoreTests","Catalog_Sort_Name_Desc_Orders_Correctly","Catalog_Sort_Name_Desc_Orders_Correctly","What: Sort by name descending via UI button.
-Steps: 1) Open Home; 2) Click 'name_desc'.
-Expected: Names are in non-increasing order."
-"passed","Sun Sep 13 09:33:09 UTC 2026","Sun Sep 13 09:33:09 UTC 2026","0","","Unit","","ModelsAndOptionsTests","RateOptions_Defaults_ArePositive","RateOptions_Defaults_ArePositive","What: Verify default RateOptions values are positive.
-Steps:
-1) Instantiate RateOptions.
-Expected: GlobalPerMinute>0; ApiPerMinute>0."
-"passed","Sun Sep 13 09:33:09 UTC 2026","Sun Sep 13 09:33:09 UTC 2026","69","","Integration","","AppEndpointsTests","Localization_Set_Redirects_And_Applies","Localization_Set_Redirects_And_Applies","What: Localization.Set switches UI culture and redirects locally.
-Steps:
-1) POST '/Localization/Set' with culture=ru and returnUrl='/' (no auto-redirect).
-2) Follow up GET '/' and check content contains some cyrillic letter.
-Expected: 302 redirect; subsequent page contains Cyrillic text."
-"passed","Sun Sep 13 09:33:09 UTC 2026","Sun Sep 13 09:33:09 UTC 2026","1","","Unit","","MiddlewareUnitTests","Middleware_FreeTier_BlockAll_Returns503_ExceptAllowlisted","Middleware_FreeTier_BlockAll_Returns503_ExceptAllowlisted","What: Verify FreeTierGuardMiddleware blocks all except allowlisted paths.
-Steps:
-1) Configure options: Enabled=true, BlockAllTraffic=true, AllowPaths=['/healthz'].
-2) '/' -> 503; '/healthz' -> next()."
-"passed","Sun Sep 13 09:33:09 UTC 2026","Sun Sep 13 09:33:09 UTC 2026","0","","Integration","","ProductsApiBehaviorTests","ProductsApi_Etag_And_304_OnList","ProductsApi_Etag_And_304_OnList","What: ETag consistency and 304 behavior on list endpoint.
+1) GET '/Products/Details/1' with '.AspNetCore.Culture=c=ru|uic=ru'.
+Expected: The page contains Russian localized strings."
+"passed","Sun Sep 13 09:39:47 UTC 2026","Sun Sep 13 09:39:47 UTC 2026","1","","Integration","","ProductsApiBehaviorTests","ProductsApi_Etag_And_304_OnList","ProductsApi_Etag_And_304_OnList","What: ETag consistency and 304 behavior on list endpoint.
 Steps:
 1) First call to obtain ETag.
 2) Second call with If-None-Match.
 Expected: Response 304 and ETag unchanged."
-"passed","Sun Sep 13 09:33:08 UTC 2026","Sun Sep 13 09:33:08 UTC 2026","64","","Integration","","ApiTests","ProductsApi_RateLimit_Enforced_ByPolicy","ProductsApi_RateLimit_Enforced_ByPolicy","What: Validate API rate limiting per free-tier constraints (ApiPerMinute=20).
+"passed","Sun Sep 13 09:39:47 UTC 2026","Sun Sep 13 09:39:47 UTC 2026","1","","Integration","","ProductsApiBehaviorTests","ProductsApi_Paging_Works_AcrossPages","ProductsApi_Paging_Works_AcrossPages","What: Verify paging splits items across pages with default sort.
 Steps:
-1) Send >20 requests to /api/products within the same minute.
-Expected: At least one response has status 429 Too Many Requests."
-"passed","Sun Sep 13 09:33:09 UTC 2026","Sun Sep 13 09:33:09 UTC 2026","1","","Integration","","ProductsApiBehaviorTests","ProductsApi_Filter_Price_And_Sort_PriceDesc","ProductsApi_Filter_Price_And_Sort_PriceDesc","What: Verify price range filters and sort by price_desc.
+1) Call page=1,pageSize=3 and page=2,pageSize=3.
+Expected: Both pages return <=3 items; first elements differ."
+"passed","Sun Sep 13 09:41:17 UTC 2026","Sun Sep 13 09:41:18 UTC 2026","1017","","UI","","ProductUiTests","ProductDetails_BackToCatalog_NavigatesHome","ProductDetails_BackToCatalog_NavigatesHome","What: Back to catalog link returns to home.
 Steps:
-1) Call GetAllProducts with minPrice/maxPrice and sort='price_desc'.
-Expected: Returned list sorted descending by price and all prices within range."
-"passed","Sun Sep 13 09:33:09 UTC 2026","Sun Sep 13 09:33:09 UTC 2026","0","","Unit","","CartControllerJsonUnitTests","Cart_RemoveFromCart_ReturnsJson_AndStopsAtOne","Cart_RemoveFromCart_ReturnsJson_AndStopsAtOne","What: Verify RemoveFromCart returns JSON payload and does not reduce below 1 when quantity==1.
+1) Open product details; click 'Back to Catalog'.
+Expected: URL returns to '/'."
+"passed","Sun Sep 13 09:39:47 UTC 2026","Sun Sep 13 09:39:47 UTC 2026","2","","Unit","","CheckoutControllerUnitFlowTests","Checkout_PostIndex_Invalid_ReturnsView","Checkout_PostIndex_Invalid_ReturnsView","What: Posting with honeypot/empty cart yields ModelState errors and returns view.
 Steps:
-1) Add same item twice; remove once via RemoveFromCart.
-Expected: Remaining quantity is 1 in JSON; totals reflect change."
-"passed","Sun Sep 13 09:34:05 UTC 2026","Sun Sep 13 09:34:06 UTC 2026","972","","UI","","CheckoutUiTests","Checkout_Form_Displays","Checkout_Form_Displays","What: Checkout form displays.
-Steps: 1) Navigate to /Checkout.
-Expected: Inputs for name/email/address/city/postal/country and Review button visible."
-"passed","Sun Sep 13 09:33:09 UTC 2026","Sun Sep 13 09:33:09 UTC 2026","1","","Unit","","JsonProductRepositoryUnitTests","JsonRepository_CRUD_Works","JsonRepository_CRUD_Works","What: Validate JSON repository CRUD flow (unit style).
+1) Post Index with Website filled or empty cart.
+Expected: ModelState invalid; returns View."
+"passed","Sun Sep 13 09:39:47 UTC 2026","Sun Sep 13 09:39:47 UTC 2026","0","","Unit","","ProductsApiControllerUnitTests","Api_GetProduct_Json_And_304_OnEtag","Api_GetProduct_Json_And_304_OnEtag","What: Validate GetProduct returns JSON and honors 304 via ETag.
 Steps:
-1) Create repo with temp path (seed from legacy).
-2) Add new sock; update description; delete.
-Expected: Operations succeed accordingly."
-"passed","Sun Sep 13 09:33:09 UTC 2026","Sun Sep 13 09:33:09 UTC 2026","5","","Integration","","ProductsApiBehaviorTests","ProductsApi_Sort_Invalid_FallsBack_To_Default","ProductsApi_Sort_Invalid_FallsBack_To_Default","What: Invalid sort value falls back to default name_asc.
+1) Call GetProduct(1) to obtain ETag.
+2) Call again with If-None-Match.
+Expected: First returns 200 JSON; second sets 304."
+"passed","Sun Sep 13 09:39:46 UTC 2026","Sun Sep 13 09:39:46 UTC 2026","33","","Integration","","AppEndpointsTests","Health_And_Robots_Respond","Health_And_Robots_Respond","What: Health and robots endpoints respond.
 Steps:
-1) Call with sort='unknown'; call with sort='name_asc'.
-Expected: Both responses yield identical ordering."
-"passed","Sun Sep 13 09:34:19 UTC 2026","Sun Sep 13 09:34:19 UTC 2026","3","","UI","","ProductsControllerTests","Products_Details_ReturnsNotFound_WhenMissing","Products_Details_ReturnsNotFound_WhenMissing","What: Verify 'Details' returns NotFound for a missing product.
+1) GET '/healthz' and '/robots.txt'.
+Expected: 200."
+"passed","Sun Sep 13 09:39:47 UTC 2026","Sun Sep 13 09:39:47 UTC 2026","1","","Unit","","ProductsApiControllerUnitTests","Api_GetAllProducts_ReturnsJson_WithCachingHeaders","Api_GetAllProducts_ReturnsJson_WithCachingHeaders","What: Cover filtering/sorting/paging for GetAllProducts and validate headers.
 Steps:
-1) Call Details with invalid id (-1).
-Expected: NotFoundResult."
-"passed","Sun Sep 13 09:33:13 UTC 2026","Sun Sep 13 09:33:18 UTC 2026","5278","","UI","","CartUiTests","Cart_Decrement_Quantity_Decreases_By_One","Cart_Decrement_Quantity_Decreases_By_One","What: Decrement quantity via '-' button.
+1) Call GetAllProducts with q/min/max/sort/culture.
+2) Capture ETag and Last-Modified headers.
+Expected: ContentResult JSON; headers present."
+"passed","Sun Sep 13 09:41:16 UTC 2026","Sun Sep 13 09:41:16 UTC 2026","2","","UI","","HomeControllerTests","Home_Index_SearchAndFilter_SortsByPriceDesc","Home_Index_SearchAndFilter_SortsByPriceDesc","What: Verify search/filter with price range sorts by price_desc.
 Steps:
-1) Add two items; go to cart.
-2) Click '-' and observe quantity.
-Expected: Quantity decreases by 1."
+1) Call Index with q='socks', sort='price_desc', minPrice=3.5, maxPrice=5.0.
+Expected: Items are sorted by price descending."
+"passed","Sun Sep 13 09:39:47 UTC 2026","Sun Sep 13 09:39:47 UTC 2026","2","","Unit","","CartControllerUnitTests","CartController_AddRemoveDeleteClear_Workflow","CartController_AddRemoveDeleteClear_Workflow","What: Validate CartController add/remove/delete/clear workflow.
+Steps:
+1) Ensure empty cart; add id=1 twice.
+2) Remove one; delete remaining; then clear after adding another.
+Expected: Counts reflect operations; ends empty."
+"passed","Sun Sep 13 09:39:47 UTC 2026","Sun Sep 13 09:39:47 UTC 2026","2","","Unit","","CartControllerJsonUnitTests","Cart_AddToCart_ReturnsJsonAndUpdatesTotals","Cart_AddToCart_ReturnsJsonAndUpdatesTotals","What: Verify AddToCart returns JSON when Accept=application/json and updates totals.
+Steps:
+1) Prepare empty session cart and set Accept header to application/json.
+2) Call AddToCart(id=1), then call again to increment quantity.
+Expected: JSON contains totalItems=2, uniqueItems=1, totalSum>0, and item with matching id and quantity."
+"passed","Sun Sep 13 09:39:47 UTC 2026","Sun Sep 13 09:39:47 UTC 2026","1","","Integration","","ProductsApiBehaviorTests","ProductsApi_Filter_MinOnly_And_MaxOnly","ProductsApi_Filter_MinOnly_And_MaxOnly","What: Verify min-only and max-only price filters.
+Steps:
+1) Call with minPrice only.
+2) Call with maxPrice only.
+Expected: All items satisfy respective bounds."
+"passed","Sun Sep 13 09:40:35 UTC 2026","Sun Sep 13 09:40:36 UTC 2026","941","","UI","","CatalogUiMoreTests","Catalog_Sort_Price_Asc_Orders_Correctly","Catalog_Sort_Price_Asc_Orders_Correctly","What: Sort by price ascending via UI button.
+Steps: 1) Open Home; 2) Click 'price_asc'.
+Expected: Prices are in non-decreasing order."
+"passed","Sun Sep 13 09:39:46 UTC 2026","Sun Sep 13 09:39:46 UTC 2026","67","","Integration","","AppEndpointsTests","Cart_Json_Actions_Work","Cart_Json_Actions_Work","What: Cart JSON endpoints work via Accept header.
+Steps:
+1) GET '/Cart/AddToCart?id=1' with Accept: application/json.
+2) GET '/Cart/RemoveFromCart?id=1' with Accept: application/json.
+Expected: 200; JSON contains totals and item block."
+"passed","Sun Sep 13 09:39:47 UTC 2026","Sun Sep 13 09:39:47 UTC 2026","0","","Unit Tests","","ShoppingCartUnitTests","Cart_SetQuantityZero_RemovesItem","Cart_SetQuantityZero_RemovesItem","What: Setting quantity to zero removes the item from the cart.
+Steps:
+1) Add one item to cart.
+2) SetQuantity(id, 0).
+Expected: Item removed; count equals 0."
+"passed","Sun Sep 13 09:39:46 UTC 2026","Sun Sep 13 09:39:46 UTC 2026","4","","Integration","","ApiDependenciesMiddlewareTests","FreeTier_BlockAll_ExceptAllowlisted","FreeTier_BlockAll_ExceptAllowlisted","What: FreeTier guard blocks except allowlisted (API dependency).
+Steps:
+1) Enabled=true, BlockAll=true, AllowPaths=['/healthz'].
+Expected: '/' -> 503; '/healthz' passes."
+"passed","Sun Sep 13 09:39:47 UTC 2026","Sun Sep 13 09:39:47 UTC 2026","1","","Integration","","ProductsApiControllerTests","ProductsApi_GetAll_Respects_IfNoneMatch_Returns304","ProductsApi_GetAll_Respects_IfNoneMatch_Returns304","What: Validate If-None-Match behavior for GetAllProducts.
+Steps:
+1) First call to obtain ETag.
+2) Second call with If-None-Match header.
+Expected: ETag is stable; status is either 200 or 304 (environment dependent)."
