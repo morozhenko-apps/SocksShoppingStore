@@ -13,10 +13,29 @@ on:
         default: "false"
 
 jobs:
+  select-runner:
+    uses: ./.github/workflows/select-runner.yml
+    secrets:
+      RUNNER_STATUS_TOKEN: ${{ secrets.RUNNER_STATUS_TOKEN }}
+
   dev-tests:
+    needs: select-runner
     if: github.ref == 'refs/heads/dev'
-    runs-on: ubuntu-latest
+    runs-on: ${{ fromJSON(needs.select-runner.outputs.self-hosted == 'true' && '["self-hosted","linux","x64","docker-builder"]' || '["ubuntu-latest"]') }}
+    container:
+      image: ${{ needs.select-runner.outputs.self-hosted == 'true' && 'mcr.microsoft.com/dotnet/sdk:8.0-bookworm-slim' || '' }}
+      options: --security-opt=no-new-privileges
     steps:
+      - name: Prepare isolated self-hosted environment
+        if: ${{ runner.environment == 'self-hosted' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          export DEBIAN_FRONTEND=noninteractive
+          apt-get update
+          apt-get install -y --no-install-recommends \
+            bash ca-certificates curl git gzip tar unzip xz-utils
+          rm -rf /var/lib/apt/lists/*
       - uses: actions/checkout@v4
       - uses: actions/setup-dotnet@v4
         with:
@@ -283,7 +302,8 @@ jobs:
           BASE_URL=http://127.0.0.1:5123 RUN_UI_TESTS=1 IGNORE_CERT_ERRORS=0 USE_TEST_FACTORY=0 \
           dotnet test SocksShoppingStore.Tests/SocksShoppingStore.Tests.csproj -c Release --filter "TestCategory=UI-Smoke" --logger "trx;LogFileName=ui-coverage.trx"
           # stop server (coverlet target)
-          pkill -f "SocksShoppingStore.dll" || true      - name: Upload coverage artifacts
+          pkill -f "SocksShoppingStore.dll" || true
+      - name: Upload coverage artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
@@ -359,4 +379,3 @@ jobs:
           path: |
             allure-results
             **/allure-results
-
