@@ -1,0 +1,65 @@
+Summary
+  Generated on: 09/13/2026 - 09:34:33
+  Coverage date: 09/13/2026 - 09:33:10
+  Parser: MultiReport (2x Cobertura)
+  Assemblies: 1
+  Classes: 43
+  Files: 42
+  Line coverage: 68.6%
+  Covered lines: 790
+  Uncovered lines: 361
+  Coverable lines: 1151
+  Total lines: 2635
+  Branch coverage: 49.6% (382 of 770)
+  Covered branches: 382
+  Total branches: 770
+  Method coverage: 76.4% (104 of 136)
+  Full method coverage: 64.7% (88 of 136)
+  Covered methods: 104
+  Fully covered methods: 88
+  Total methods: 136
+
+SocksShoppingStore                                             68.6%
+  AspNetCoreGeneratedDocument.Views__ViewStart                  100%
+  AspNetCoreGeneratedDocument.Views_Cart_Index                    0%
+  AspNetCoreGeneratedDocument.Views_Checkout_Index                0%
+  AspNetCoreGeneratedDocument.Views_Checkout_PaymentFailed        0%
+  AspNetCoreGeneratedDocument.Views_Checkout_Review               0%
+  AspNetCoreGeneratedDocument.Views_Checkout_ThankYou             0%
+  AspNetCoreGeneratedDocument.Views_Home_Index                 81.2%
+  AspNetCoreGeneratedDocument.Views_Home_Privacy                  0%
+  AspNetCoreGeneratedDocument.Views_Legal_Privacy               100%
+  AspNetCoreGeneratedDocument.Views_Legal_Terms                 100%
+  AspNetCoreGeneratedDocument.Views_Products_Details            100%
+  AspNetCoreGeneratedDocument.Views_Shared__Layout             91.3%
+  AspNetCoreGeneratedDocument.Views_Shared_Error                  0%
+  Program                                                      93.8%
+  SocksShoppingStore.Config.TaxOptions                          100%
+  SocksShoppingStore.Controllers.CartController                  84%
+  SocksShoppingStore.Controllers.CheckoutController            63.8%
+  SocksShoppingStore.Controllers.HomeController                 100%
+  SocksShoppingStore.Controllers.LegalController                100%
+  SocksShoppingStore.Controllers.LocalizationController         100%
+  SocksShoppingStore.Controllers.ProductsApiController         94.9%
+  SocksShoppingStore.Controllers.ProductsController             100%
+  SocksShoppingStore.Controllers.StripeWebhookController          0%
+  SocksShoppingStore.Data.JsonProductRepository                96.5%
+  SocksShoppingStore.Data.LegacyProductRepository               100%
+  SocksShoppingStore.Data.ProductRepository                     100%
+  SocksShoppingStore.Helpers.Currency                            50%
+  SocksShoppingStore.Helpers.SessionHelper                      100%
+  SocksShoppingStore.Middleware.ConcurrencyLimiterMiddleware    100%
+  SocksShoppingStore.Middleware.FreeTierGuardMiddleware         100%
+  SocksShoppingStore.Middleware.FreeTierOptions                 100%
+  SocksShoppingStore.Middleware.SecurityHeadersMiddleware       100%
+  SocksShoppingStore.Models.CatalogViewModel                      0%
+  SocksShoppingStore.Models.ErrorViewModel                      100%
+  SocksShoppingStore.Models.Order                               100%
+  SocksShoppingStore.Models.OrderItem                           100%
+  SocksShoppingStore.Models.ShoppingCart                       90.9%
+  SocksShoppingStore.RequestMetrics                             100%
+  SocksShoppingStore.Services.PaymentSessionStore               3.3%
+  SocksShoppingStore.Services.PdfInvoiceService                   0%
+  SocksShoppingStore.Services.ProductCatalogLocalizer           100%
+  SocksShoppingStore.Services.StripeCheckoutService            88.3%
+  SocksShoppingStore.Services.TotalsCalculator                   61%

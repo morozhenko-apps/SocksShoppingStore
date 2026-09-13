@@ -1,0 +1,1 @@
+[{"values":["http://127.0.0.1:5123"],"name":"BASE_URL"},{"values":["True"],"name":"RUN_UI_TESTS"},{"values":["False"],"name":"IGNORE_CERT_ERRORS"},{"values":["False"],"name":"USE_TEST_FACTORY"},{"values":["Unix 6.17.0.1022"],"name":"OS"},{"values":["8.0.31"],"name":"DOTNET_VERSION"}]
