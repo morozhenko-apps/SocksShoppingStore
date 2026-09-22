@@ -1,29 +1,29 @@
 name: Tests and Deployment
 
 on:
-  push:
-    branches: [ dev, main ]
   pull_request:
     branches: [ main ]
   workflow_dispatch:
     inputs:
+      runner:
+        description: "Execution lane selected by RunnerRouter (or manually)"
+        required: true
+        type: choice
+        default: self-hosted
+        options:
+          - self-hosted
+          - hosted
       run_ui:
         description: "Run UI tests"
         required: false
         default: "false"
 
 jobs:
-  select-runner:
-    uses: ./.github/workflows/select-runner.yml
-    secrets:
-      RUNNER_STATUS_TOKEN: ${{ secrets.RUNNER_STATUS_TOKEN }}
-
   dev-tests:
-    needs: select-runner
     if: github.ref == 'refs/heads/dev'
-    runs-on: ${{ fromJSON(needs.select-runner.outputs.self-hosted == 'true' && '["self-hosted","linux","x64","docker-builder"]' || '["ubuntu-latest"]') }}
+    runs-on: ${{ fromJSON(inputs.runner == 'self-hosted' && '["self-hosted","linux","x64","docker-builder"]' || '["ubuntu-latest"]') }}
     container:
-      image: ${{ needs.select-runner.outputs.self-hosted == 'true' && 'mcr.microsoft.com/dotnet/sdk:8.0-bookworm-slim' || '' }}
+      image: ${{ inputs.runner == 'self-hosted' && 'mcr.microsoft.com/dotnet/sdk:8.0-bookworm-slim' || '' }}
       options: --security-opt=no-new-privileges
     steps:
       - name: Prepare isolated self-hosted environment
