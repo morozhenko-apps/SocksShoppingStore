@@ -42,11 +42,33 @@
             }
         </tbody>
         <tfoot>
+            @{
+                var taxLabel = ViewBag.TaxLabel as string;
+                var taxRate = ViewBag.TaxRatePercent as decimal?;
+                var taxAmount = ViewBag.TaxAmount as decimal?;
+                var totalIncl = ViewBag.TotalInclTax as decimal?;
+            }
+            @if (taxAmount != null && taxAmount.Value > 0)
+            {
+                <tr>
+                    <td colspan="3" class="text-end">@taxLabel @if(taxRate.HasValue){<text>(@taxRate.Value.ToString("0.##")%)</text>}</td>
+                    <td class="text-center">@Currency.Eur(taxAmount.Value)</td>
+                    <td></td>
+                </tr>
+            }
             <tr>
                 <td colspan="3" class="text-end"><strong>@T["Total"]:</strong></td>
                 <td class="text-center"><strong id="cart-total-sum">@Currency.Eur(Model.GetTotalSum())</strong></td>
                 <td></td>
             </tr>
+            @if (totalIncl != null && totalIncl.Value != Model.GetTotalSum())
+            {
+                <tr>
+                    <td colspan="3" class="text-end"><strong>@T["TotalInclVAT"]</strong></td>
+                    <td class="text-center"><strong>@Currency.Eur(totalIncl.Value)</strong></td>
+                    <td></td>
+                </tr>
+            }
         </tfoot>
     </table>
     <div class="d-flex justify-content-end">

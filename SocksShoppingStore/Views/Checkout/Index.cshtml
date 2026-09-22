@@ -45,6 +45,26 @@
         <span asp-validation-for="Country" class="text-danger"></span>
     </div>
 
+    @{
+        var shippingMethods = ViewBag.ShippingMethods as System.Collections.Generic.List<SocksShoppingStore.Config.ShippingMethod>;
+    }
+    @if (shippingMethods != null)
+    {
+        <div class="col-md-6">
+            <label for="ShippingMethod" class="form-label">@T["ShippingMethod"]</label>
+            <select asp-for="ShippingMethod" class="form-select">
+                @foreach (var m in shippingMethods)
+                {
+                    <option value="@m.Code">@m.Name (@SocksShoppingStore.Helpers.Currency.Eur(m.Price))</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-6">
+            <label for="PromoCode" class="form-label">@T["PromoCode"]</label>
+            <input asp-for="PromoCode" class="form-control" />
+        </div>
+    }
+
     <div class="col-12 d-grid d-sm-flex gap-2">
         <a asp-controller="Cart" asp-action="Index" class="btn btn-outline-secondary">@T["BackToCart"]</a>
         <button type="submit" class="btn btn-primary">@T["ReviewOrder"]</button>

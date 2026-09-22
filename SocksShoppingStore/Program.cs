@@ -28,6 +28,8 @@ builder.Services.AddSession(options =>
 // Payments
 builder.Services.AddScoped<SocksShoppingStore.Services.StripeCheckoutService>();
 builder.Services.AddSingleton<SocksShoppingStore.Services.PaymentSessionStore>();
+builder.Services.AddSingleton<SocksShoppingStore.Services.TotalsCalculator>();
+builder.Services.AddSingleton<SocksShoppingStore.Services.PdfInvoiceService>();
 
 // Default culture for numbers (we will format prices explicitly as EUR)
 var defaultCulture = new CultureInfo("en-US");
@@ -45,6 +47,10 @@ builder.Services.Configure<FreeTierOptions>(builder.Configuration.GetSection("Fr
 builder.Services.Configure<ConcurrencyOptions>(builder.Configuration.GetSection("Concurrency"));
 builder.Services.Configure<LegalOptions>(builder.Configuration.GetSection("Legal"));
 builder.Services.Configure<SocksShoppingStore.Config.StripeOptions>(builder.Configuration.GetSection("Stripe"));
+builder.Services.Configure<SocksShoppingStore.Config.TaxOptions>(builder.Configuration.GetSection("Tax"));
+builder.Services.Configure<SocksShoppingStore.Config.ShippingOptions>(builder.Configuration.GetSection("Shipping"));
+builder.Services.Configure<SocksShoppingStore.Config.PromoOptions>(builder.Configuration.GetSection("Promotions"));
+builder.Services.Configure<SocksShoppingStore.Config.FeatureFlags>(builder.Configuration.GetSection("Features"));
 
 // Repository provider (InMemory default, optional JSON persistence)
 var repoProvider = builder.Configuration.GetSection("Repository:Provider").Get<string>() ?? "InMemory";

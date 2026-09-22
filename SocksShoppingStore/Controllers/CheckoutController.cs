@@ -15,12 +15,16 @@ namespace SocksShoppingStore.Controllers
         private readonly ILogger<CheckoutController> _logger;
         private readonly StripeCheckoutService _stripe;
         private readonly PaymentSessionStore _sessionStore;
+        private readonly Services.TotalsCalculator _totals;
+        private readonly Microsoft.Extensions.Options.IOptions<SocksShoppingStore.Config.FeatureFlags>? _featureFlags;
         [ActivatorUtilitiesConstructor]
-        public CheckoutController(ILogger<CheckoutController> logger, StripeCheckoutService stripe, PaymentSessionStore sessionStore)
+        public CheckoutController(ILogger<CheckoutController> logger, StripeCheckoutService stripe, PaymentSessionStore sessionStore, Services.TotalsCalculator totals, Microsoft.Extensions.Options.IOptions<SocksShoppingStore.Config.FeatureFlags> featureFlags)
         {
             _logger = logger;
             _stripe = stripe;
             _sessionStore = sessionStore;
+            _totals = totals;
+            _featureFlags = featureFlags;
         }
 
         // Test-friendly fallback constructor (used by legacy tests creating controller directly)
@@ -30,13 +34,37 @@ namespace SocksShoppingStore.Controllers
                 new StripeCheckoutService(
                     Microsoft.Extensions.Options.Options.Create(new StripeOptions { SecretKey = "sk_test_dummy" }),
                     NullLogger<StripeCheckoutService>.Instance),
-                new PaymentSessionStore())
+                new PaymentSessionStore(),
+                new Services.TotalsCalculator(
+                    Microsoft.Extensions.Options.Options.Create(new SocksShoppingStore.Config.TaxOptions()),
+                    Microsoft.Extensions.Options.Options.Create(new SocksShoppingStore.Config.ShippingOptions()),
+                    Microsoft.Extensions.Options.Options.Create(new SocksShoppingStore.Config.PromoOptions())
+                ),
+                Microsoft.Extensions.Options.Options.Create(new SocksShoppingStore.Config.FeatureFlags { EnableTaxes = true, EnableShipping = true, EnablePromoCodes = true, EnablePdfInvoices = true, OnlyInDevelopment = false })
+            )
         { }
 
         [HttpGet]
         public IActionResult Index()
         {
             // Show checkout form
+            try
+            {
+                var ff = HttpContext.RequestServices.GetService<Microsoft.Extensions.Options.IOptions<SocksShoppingStore.Config.FeatureFlags>>()?.Value;
+                var env = HttpContext.RequestServices.GetRequiredService<Microsoft.AspNetCore.Hosting.IWebHostEnvironment>();
+                var enable = ff == null || !ff.OnlyInDevelopment || env.IsDevelopment();
+                var shipOn = ff?.EnableShipping ?? true;
+                var promoOn = ff?.EnablePromoCodes ?? true;
+                if (enable && (shipOn || promoOn))
+                {
+                    var shipping = HttpContext.RequestServices.GetService<Microsoft.Extensions.Options.IOptions<SocksShoppingStore.Config.ShippingOptions>>()?.Value;
+                    if (shipping != null)
+                    {
+                        ViewBag.ShippingMethods = shipping.Methods;
+                    }
+                }
+            }
+            catch { }
             return View(new CheckoutViewModel());
         }
 
@@ -81,6 +109,16 @@ namespace SocksShoppingStore.Controllers
                 }).ToList()
             };
 
+            // Compute totals (VAT EU, prices include tax)
+            var ff = _featureFlags?.Value;
+            var enable = ff == null || !ff.OnlyInDevelopment || HttpContext.RequestServices.GetRequiredService<IWebHostEnvironment>().IsDevelopment();
+            if (enable && (ff?.EnableTaxes != false || ff?.EnableShipping != false || ff?.EnablePromoCodes != false))
+            {
+                var (totals, shipCode, promo)
+                    = _totals.Compute(draft.Items, model.ShippingMethod, model.PromoCode, estimated: false);
+                draft.Totals = totals;
+            }
+
             HttpContext.Session.Set("OrderDraft", draft);
             _logger.LogInformation("checkout_start: items={Count}", draft.Items.Count);
             return RedirectToAction("Review");
@@ -91,6 +129,22 @@ namespace SocksShoppingStore.Controllers
         {
             var draft = HttpContext.Session.Get<Order>("OrderDraft");
             if (draft == null) return RedirectToAction("Index");
+
+            // Ensure totals are present (e.g., if draft created before features enabled)
+            try
+            {
+                var ff = _featureFlags?.Value;
+                var env = HttpContext.RequestServices.GetRequiredService<IWebHostEnvironment>();
+                var enable = ff == null || !ff.OnlyInDevelopment || env.IsDevelopment();
+                var taxesOn = ff?.EnableTaxes ?? true;
+                if (enable && taxesOn && (draft.Totals == null || draft.Totals.TaxRatePercent <= 0))
+                {
+                    var (totals, _, _) = _totals.Compute(draft.Items, draft?.Totals != null ? null : null, null, estimated: false);
+                    draft.Totals = totals;
+                    HttpContext.Session.Set("OrderDraft", draft);
+                }
+            }
+            catch { }
             return View(draft);
         }
 
@@ -154,6 +208,31 @@ namespace SocksShoppingStore.Controllers
         {
             return View();
         }
+
+        [HttpGet]
+        public IActionResult Invoice()
+        {
+            var ff = _featureFlags?.Value;
+            var enable = ff == null || !ff.OnlyInDevelopment || HttpContext.RequestServices.GetRequiredService<IWebHostEnvironment>().IsDevelopment();
+            if (!(enable && (ff?.EnablePdfInvoices ?? true)))
+            {
+                return NotFound();
+            }
+
+            var order = HttpContext.Session.Get<Order>("LastOrder");
+            if (order == null) return RedirectToAction("Index");
+
+            try
+            {
+                var pdf = HttpContext.RequestServices.GetRequiredService<SocksShoppingStore.Services.PdfInvoiceService>().Generate(order);
+                var fileName = $"Invoice-{order.Id}.pdf";
+                return File(pdf, "application/pdf", fileName);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "invoice_generation_error");
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
     }
 }
-

@@ -29,9 +29,33 @@
   }
   </tbody>
   <tfoot>
+    @if (Model?.Totals?.Discount > 0)
+    {
+      <tr>
+        <td colspan="2" class="text-end">@T["Discount"]</td>
+        <td class="text-end">-@SocksShoppingStore.Helpers.Currency.Eur(Model!.Totals!.Discount)</td>
+      </tr>
+    }
+    @if (Model?.Totals?.Shipping > 0)
+    {
+      <tr>
+        <td colspan="2" class="text-end">@T["Shipping"]</td>
+        <td class="text-end">@SocksShoppingStore.Helpers.Currency.Eur(Model!.Totals!.Shipping)</td>
+      </tr>
+    }
     <tr>
-      <td colspan="2" class="text-end"><strong>@T["Total"]</strong></td>
-      <td class="text-end"><strong>@SocksShoppingStore.Helpers.Currency.Eur(Model.Total)</strong></td>
+      <td colspan="2" class="text-end">
+        @{
+          var taxLabel = Model?.Totals?.TaxLabel ?? "VAT";
+          var taxRate = Model?.Totals?.TaxRatePercent ?? 0m;
+        }
+        @taxLabel @if (taxRate > 0) { <text>(@taxRate.ToString("0.##")%)</text> }
+      </td>
+      <td class="text-end">@SocksShoppingStore.Helpers.Currency.Eur(Model?.Totals?.TaxAmount ?? 0)</td>
+    </tr>
+    <tr>
+      <td colspan="2" class="text-end"><strong>@T["TotalInclVAT"]</strong></td>
+      <td class="text-end"><strong>@SocksShoppingStore.Helpers.Currency.Eur(Model?.Totals?.TotalInclTax ?? Model.Total)</strong></td>
     </tr>
   </tfoot>
 </table>

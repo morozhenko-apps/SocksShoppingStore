@@ -18,6 +18,8 @@ namespace SocksShoppingStore.Models
 
         public decimal Total => Items.Sum(i => i.Subtotal);
         public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
+
+        // Extended totals (breakdown). Nullable until computed.
+        public OrderTotals? Totals { get; set; }
     }
 }
-

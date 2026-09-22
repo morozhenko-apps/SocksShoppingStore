@@ -13,6 +13,7 @@
   <ItemGroup>
     <PackageReference Include="jQuery" Version="3.7.1" />
     <PackageReference Include="jQuery.Validation" Version="1.21.0" />
+    <PackageReference Include="QuestPDF" Version="2025.7.4" />
     <PackageReference Include="Stripe.net" Version="42.30.0" />
   </ItemGroup>
 

@@ -8,14 +8,45 @@ namespace SocksShoppingStore.Controllers
     public class CartController : Controller
     {
         private readonly SocksShoppingStore.Data.IProductRepository _repo;
-        public CartController(SocksShoppingStore.Data.IProductRepository? repo = null)
+        private readonly SocksShoppingStore.Services.TotalsCalculator? _totals;
+        private readonly Microsoft.Extensions.Options.IOptions<SocksShoppingStore.Config.FeatureFlags>? _featureFlags;
+
+        public CartController(
+            SocksShoppingStore.Data.IProductRepository? repo = null,
+            SocksShoppingStore.Services.TotalsCalculator? totals = null,
+            Microsoft.Extensions.Options.IOptions<SocksShoppingStore.Config.FeatureFlags>? featureFlags = null)
         {
             _repo = repo ?? new SocksShoppingStore.Data.LegacyProductRepository();
+            _totals = totals;
+            _featureFlags = featureFlags;
         }
 
         public IActionResult Index()
         {
             var cart = HttpContext.Session.Get<ShoppingCart>("Cart") ?? new ShoppingCart();
+            try
+            {
+                var ff = _featureFlags?.Value;
+                var env = HttpContext.RequestServices.GetService<Microsoft.AspNetCore.Hosting.IWebHostEnvironment>();
+                var enable = ff == null || !(ff.OnlyInDevelopment) || (env?.IsDevelopment() ?? false);
+                var taxesOn = ff?.EnableTaxes ?? true;
+                if (enable && taxesOn && _totals != null && cart.Items.Any())
+                {
+                    var items = cart.Items.Select(i => new OrderItem
+                    {
+                        ProductId = i.Sock.Id,
+                        Name = i.Sock.Name,
+                        UnitPrice = i.Sock.Price,
+                        Quantity = i.Quantity
+                    });
+                    var (totals, _, _) = _totals.Compute(items, shippingCode: null, promoCode: null, estimated: true);
+                    ViewBag.TaxLabel = totals.TaxLabel;
+                    ViewBag.TaxRatePercent = totals.TaxRatePercent;
+                    ViewBag.TaxAmount = totals.TaxAmount;
+                    ViewBag.TotalInclTax = totals.TotalInclTax;
+                }
+            }
+            catch { }
             return View(cart);
         }
 

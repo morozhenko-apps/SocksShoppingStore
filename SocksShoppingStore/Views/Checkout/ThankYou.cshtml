@@ -15,6 +15,13 @@
       </button>
     </div>
     <p class="mt-3">@T["Total"]: <strong>@SocksShoppingStore.Helpers.Currency.Eur(Model.Total)</strong></p>
+    @if (Model?.Totals?.TotalInclTax > 0 && Model.Totals.TotalInclTax != Model.Total)
+    {
+      <p class="mb-0">@T["TotalInclVAT"]: <strong>@SocksShoppingStore.Helpers.Currency.Eur(Model.Totals.TotalInclTax)</strong></p>
+    }
+    <div class="mt-3">
+      <a asp-action="Invoice" class="btn btn-outline-secondary btn-sm">@T["DownloadInvoicePdf"]</a>
+    </div>
   }
   else
   {
