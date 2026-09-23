@@ -42,10 +42,10 @@ The optimal strategy is a hybrid approach to test execution, balancing rapid fee
 | **Unit Tests**             | GitHub Actions                  | On every commit/PR              |
 | **Integration Tests**      | GitHub Actions                  | On every commit/PR              |
 | **API Tests (Smoke)**      | GitHub Actions                  | On every commit/PR              |
-| **UI Tests (Smoke)**       | GitHub Actions                  | On every commit/PR              |
-| **Performance Tests (k6)** | GitHub Actions                  | On every commit/PR              |
-| **Security Scans (ZAP)**   | GitHub Actions                  | On every commit/PR              |
-| **UI Tests (Full Regression)** | Local Machine               | Before major merges, on a schedule |
+| **UI Tests (Smoke)**       | GitHub Actions release gate     | On an annotated release tag     |
+| **Coverage/report publishing** | GitHub Actions release gate | On an annotated release tag   |
+| **Azure deployment**       | GitHub Actions release gate     | On an annotated release tag     |
+| **UI Tests (Full Regression)** | Local Machine               | Before major releases as needed |
 
 ### Running Tests Locally
 
