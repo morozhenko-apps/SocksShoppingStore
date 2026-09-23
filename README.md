@@ -56,14 +56,19 @@ For Russian-language docs, see `README.ru.md` and `docs/*/*.ru.md` counterparts.
 See `LICENSE`.
 ## CI / Reports
 
-- CI Workflows: `.github/workflows/test-and-report.yml`
-- Branches:
-  - `dev`: fast tests (Unit + Integration + API-Smoke), Allure artifacts
-  - `main`: full regression (incl. UI), coverage export, Allure report published to GitHub Pages
-- Allure Report (GitHub Pages): https://rudExtremo.github.io/SocksShoppingStore (first publish occurs after a successful main run)
+- CI workflow: `.github/workflows/test-and-report.yml`.
+- RunnerRouter dispatches `dev` and `main` pushes to an online compatible
+  self-hosted runner when available, otherwise to the hosted fallback selected
+  by the router.
+- Branch and pull-request runs execute only the fast Unit + Integration +
+  API-Smoke gate. A newer run for the same branch or pull request cancels the
+  obsolete run.
+- Full regression, UI smoke, coverage/report publication, and Azure deployment
+  run only for an annotated `vX.Y.Z` tag whose commit is current `main` HEAD.
+  Release-tag runs are not auto-cancelled.
+- Allure Report (GitHub Pages): https://rudExtremo.github.io/SocksShoppingStore.
 
 Badges:
 
 ![CI Dev](https://github.com/rudExtremo/SocksShoppingStore/actions/workflows/test-and-report.yml/badge.svg?branch=dev)
-![CI Main](https://github.com/rudExtremo/SocksShoppingStore/actions/workflows/test-and-report.yml/badge.svg?branch=main)
 
