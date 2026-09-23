@@ -69,10 +69,24 @@ jobs:
   main-tests:
     name: Full release regression and deployment
     if: github.event_name == 'workflow_dispatch' && github.ref_type == 'tag'
-    runs-on: ubuntu-latest
+    runs-on: ${{ fromJSON(inputs.runner == 'self-hosted' && '["self-hosted","linux","x64","docker-builder"]' || '["ubuntu-latest"]') }}
+    container:
+      image: ${{ inputs.runner == 'self-hosted' && 'mcr.microsoft.com/dotnet/sdk:8.0-bookworm-slim' || '' }}
+      options: --security-opt=no-new-privileges
     permissions:
       contents: write
     steps:
+      - name: Prepare isolated self-hosted environment
+        if: ${{ runner.environment == 'self-hosted' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          export DEBIAN_FRONTEND=noninteractive
+          apt-get update
+          apt-get install -y --no-install-recommends \
+            bash ca-certificates chromium chromium-driver curl git sudo
+          rm -rf /var/lib/apt/lists/*
+
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
