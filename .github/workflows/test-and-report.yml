@@ -14,16 +14,25 @@ on:
           - self-hosted
           - hosted
       run_ui:
-        description: "Run UI tests"
+        description: "Run UI tests manually"
         required: false
         default: "false"
 
+permissions:
+  contents: read
+
+concurrency:
+  group: socks-shopping-store-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.ref_type != 'tag' }}
+
 jobs:
-  dev-tests:
-    if: github.ref == 'refs/heads/dev'
-    runs-on: ${{ fromJSON(inputs.runner == 'self-hosted' && '["self-hosted","linux","x64","docker-builder"]' || '["ubuntu-latest"]') }}
+  quick:
+    name: Fast branch / PR checks
+    if: github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && github.ref_type == 'branch')
+    runs-on: ${{ fromJSON((github.event_name != 'workflow_dispatch' || inputs.runner == 'self-hosted') && '["self-hosted","linux","x64","docker-builder"]' || '["ubuntu-latest"]') }}
+    timeout-minutes: 15
     container:
-      image: ${{ inputs.runner == 'self-hosted' && 'mcr.microsoft.com/dotnet/sdk:8.0-bookworm-slim' || '' }}
+      image: ${{ (github.event_name != 'workflow_dispatch' || inputs.runner == 'self-hosted') && 'mcr.microsoft.com/dotnet/sdk:8.0-bookworm-slim' || '' }}
       options: --security-opt=no-new-privileges
     steps:
       - name: Prepare isolated self-hosted environment
@@ -33,71 +42,59 @@ jobs:
           set -euo pipefail
           export DEBIAN_FRONTEND=noninteractive
           apt-get update
-          apt-get install -y --no-install-recommends \
-            bash ca-certificates curl git gzip tar unzip xz-utils
+          apt-get install -y --no-install-recommends bash ca-certificates curl git gzip tar unzip xz-utils
           rm -rf /var/lib/apt/lists/*
+
       - uses: actions/checkout@v4
+
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
+
       - name: Restore
         run: |
           dotnet restore SocksShoppingStore/SocksShoppingStore.csproj
           dotnet restore SocksShoppingStore.Tests/SocksShoppingStore.Tests.csproj
-      - name: Run fast tests (Unit + Integration + API-Smoke)
+
+      - name: Run fast tests
         env:
           BASE_URL: http://127.0.0.1:5123
           USE_TEST_FACTORY: '1'
           RUN_UI_TESTS: '0'
         run: |
-          dotnet test SocksShoppingStore.Tests/SocksShoppingStore.Tests.csproj -c Release --filter "TestCategory=Unit|TestCategory=Integration|TestCategory=API-Smoke" --logger "trx;LogFileName=dev.trx"
-      - name: Integration coverage (scoped)
-        shell: bash
-        env:
-          USE_TEST_FACTORY: '1'
-        run: |
           dotnet test SocksShoppingStore.Tests/SocksShoppingStore.Tests.csproj -c Release \
-            --filter "TestCategory=Integration" \
-            --settings coverlet.integration.runsettings
-      - name: API coverage (scoped via Include)
-        shell: bash
-        env:
-          USE_TEST_FACTORY: '1'
-        run: |
-          dotnet test SocksShoppingStore.Tests/SocksShoppingStore.Tests.csproj -c Release \
-            --filter "TestCategory=API-Smoke" \
-            --settings coverlet.api.runsettings \
-            --results-directory SocksShoppingStore.Tests/TestResults/CoverageApi
-      - name: Upload Allure results
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: allure-results-dev
-          path: |
-            allure-results
-            **/allure-results
-      - name: Upload Integration coverage (Cobertura)
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: coverage-integration-dev
-          path: |
-            **/TestResults/**/coverage.cobertura.xml
-      - name: Upload API coverage (Cobertura)
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: coverage-api-dev
-          path: |
-            **/TestResults/CoverageApi/**/coverage.cobertura.xml
+            --filter "TestCategory=Unit|TestCategory=Integration|TestCategory=API-Smoke" \
+            --logger "trx;LogFileName=quick.trx"
 
   main-tests:
-    if: github.ref == 'refs/heads/main' || github.event_name == 'pull_request'
+    name: Full release regression and deployment
+    if: github.event_name == 'workflow_dispatch' && github.ref_type == 'tag'
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+      - name: Verify annotated release tag is current main HEAD
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "${GITHUB_REF_NAME}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]] || {
+            echo "::error::Release tag must match vX.Y.Z"
+            exit 1
+          }
+          git fetch --force origin "refs/tags/${GITHUB_REF_NAME}:refs/tags/${GITHUB_REF_NAME}"
+          [[ "$(git cat-file -t "refs/tags/${GITHUB_REF_NAME}")" == "tag" ]] || {
+            echo "::error::Release tag must be annotated"
+            exit 1
+          }
+          git fetch --no-tags origin main:refs/remotes/origin/main
+          [[ "$(git rev-parse HEAD)" == "$(git rev-parse refs/remotes/origin/main)" ]] || {
+            echo "::error::Release tag must point to current origin/main HEAD"
+            exit 1
+          }
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
@@ -269,13 +266,13 @@ jobs:
           publish_branch: gh-pages
 
       - name: Publish app (Release)
-        if: success() && github.ref == 'refs/heads/main'
+        if: success() && github.ref_type == 'tag'
         run: |
           dotnet restore SocksShoppingStore/SocksShoppingStore.csproj
           dotnet publish SocksShoppingStore/SocksShoppingStore.csproj -c Release -o ./publish
 
       - name: Deploy to Azure App Service
-        if: success() && github.ref == 'refs/heads/main'
+        if: success() && github.ref_type == 'tag'
         uses: azure/webapps-deploy@v3
         with:
           publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
@@ -320,26 +317,6 @@ jobs:
           path: |
             SocksShoppingStore.Tests/TestResults/Coverage/main.trx
             SocksShoppingStore.Tests/TestResults/UI/ui.trx
-
-  deploy-azure:
-    name: Deploy to Azure App Service
-    if: github.ref == 'refs/heads/main'
-    needs: main-tests
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '8.0.x'
-      - name: Publish app (Release)
-        run: |
-          dotnet restore SocksShoppingStore/SocksShoppingStore.csproj
-          dotnet publish SocksShoppingStore/SocksShoppingStore.csproj -c Release -o ./publish
-      - name: Deploy to Azure App Service
-        uses: azure/webapps-deploy@v3
-        with:
-          publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
-          package: './publish'
 
   manual-ui:
     if: github.event_name == 'workflow_dispatch' && inputs.run_ui == 'true'
