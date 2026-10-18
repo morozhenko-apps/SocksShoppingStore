@@ -57,9 +57,10 @@ See `LICENSE`.
 ## CI / Reports
 
 - CI workflow: `.github/workflows/test-and-report.yml`.
-- RunnerRouter dispatches `dev` and `main` pushes to an online compatible
-  self-hosted runner when available, otherwise to the hosted fallback selected
-  by the router.
+- This public repository uses **GitHub-hosted Linux** for all pull requests,
+  routed branch checks and release-tag jobs. RunnerRouter dispatches with
+  `runner=hosted`; it never selects the owner's local self-hosted runners.
+  The source-enforced guard is `ci/test_runner_routing.py`.
 - Branch and pull-request runs execute only the fast Unit + Integration +
   API-Smoke gate. A newer run for the same branch or pull request cancels the
   obsolete run.
