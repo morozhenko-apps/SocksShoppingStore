@@ -25,8 +25,10 @@ class RunnerRoutingContractTest(unittest.TestCase):
         self.assertNotIn("          - self-hosted", header)
 
     def test_existing_deployment_semantics_are_preserved(self):
-        self.assertIn("deploy-azure:", WORKFLOW)
+        self.assertIn("main-tests:", WORKFLOW)
+        self.assertIn("name: Deploy to Azure App Service", WORKFLOW)
         self.assertIn("azure/webapps-deploy", WORKFLOW)
+        self.assertIn("github.ref_type == 'tag'", WORKFLOW)
         self.assertIn("manual-ui:", WORKFLOW)
 
     def test_local_selector_is_removed(self):
