@@ -13,14 +13,14 @@ class RunnerRoutingContractTest(unittest.TestCase):
 
     def test_all_jobs_use_provider_hosted_runners(self):
         import re
-        assigned = re.findall(r"^\\s+runs-on:\\s*(.+)$", WORKFLOW, flags=re.MULTILINE)
+        assigned = re.findall(r"^\s+runs-on:\s*(.+)$", WORKFLOW, flags=re.MULTILINE)
         self.assertEqual(["ubuntu-latest"] * 3, assigned)
         self.assertNotIn("runs-on: ${{", WORKFLOW)
 
     def test_router_input_never_allows_self_hosted_lane(self):
         header = WORKFLOW.split("jobs:", 1)[0]
         self.assertIn("default: hosted", header)
-        self.assertIn("options:\\n          - hosted", header)
+        self.assertIn("options:\n          - hosted", header)
         self.assertNotIn("default: self-hosted", header)
         self.assertNotIn("          - self-hosted", header)
 
