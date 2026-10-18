@@ -11,18 +11,18 @@ class RunnerRoutingContractTest(unittest.TestCase):
         self.assertIn("pull_request:\n    branches: [ main ]", header)
         self.assertIn("workflow_dispatch:\n    inputs:\n      runner:", header)
 
-    def test_dev_lane_uses_router_input(self):
-        self.assertIn(
-            "fromJSON(inputs.runner == 'self-hosted' && "
-            "'[\"self-hosted\",\"linux\",\"x64\",\"docker-builder\"]' || "
-            "'[\"ubuntu-latest\"]')",
-            WORKFLOW,
-        )
-        self.assertIn(
-            "image: ${{ inputs.runner == 'self-hosted' && "
-            "'mcr.microsoft.com/dotnet/sdk:8.0-bookworm-slim' || '' }}",
-            WORKFLOW,
-        )
+    def test_all_jobs_use_provider_hosted_runners(self):
+        import re
+        assigned = re.findall(r"^\\s+runs-on:\\s*(.+)$", WORKFLOW, flags=re.MULTILINE)
+        self.assertEqual(["ubuntu-latest"] * 3, assigned)
+        self.assertNotIn("runs-on: ${{", WORKFLOW)
+
+    def test_router_input_never_allows_self_hosted_lane(self):
+        header = WORKFLOW.split("jobs:", 1)[0]
+        self.assertIn("default: hosted", header)
+        self.assertIn("options:\\n          - hosted", header)
+        self.assertNotIn("default: self-hosted", header)
+        self.assertNotIn("          - self-hosted", header)
 
     def test_existing_deployment_semantics_are_preserved(self):
         self.assertIn("deploy-azure:", WORKFLOW)
