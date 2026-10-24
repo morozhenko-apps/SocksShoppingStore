@@ -20,23 +20,38 @@ A simple ASP.NET Core MVC demo app for browsing fun “job-themed” socks, addi
 - `SocksShoppingStore/Services` — `ProductCatalogLocalizer`, request `RateOptions`, basic `RequestMetrics`.
 - `SocksShoppingStore/Data` — in-memory `ProductRepository`.
 - `SocksShoppingStore/Models` — `Sock`, `ShoppingCart`, `CartItem`, `ErrorViewModel`.
-- `SocksShoppingStore/Views` — Razor Pages (UI), `wwwroot` for static assets.
+- `SocksShoppingStore/Views` — Razor Views (UI), `wwwroot` for static assets.
 - `SocksShoppingStore/Program.cs` — pipeline, DI, localization, sessions, rate limiting, metrics.
-- `.codex` — legacy RTF/PDF roadmap and description (migrated into `docs/`).
+- `docs/` — maintained project documentation and the migrated legacy roadmap context.
+- `.codex/` — ignored machine-local historical material, if present; not a required project input.
 
 ## Documentation
 
-- Overview: `docs/overview.md`
-- Architecture: `docs/architecture.md`
-- Setup: `docs/setup.md`
-- API: `docs/api/products.md`
-- Internationalization: `docs/internationalization.md`
-- Security & Limits: `docs/security-and-limits.md`
-- Metrics: `docs/metrics.md`
-- Roadmap: `docs/roadmap.md`
-- Contributing: `docs/contributing.md`
+| Owner | Scope |
+| --- | --- |
+| [Agent guide](docs/SOCKS_AGENT_GUIDE.md) | Handoff, runtime invariants, routes and code entrypoints |
+| [Overview](docs/overview.md) | Purpose, implemented scope, constraints and explicitly future roadmap |
+| [Architecture](docs/architecture.md) | Pipeline, API/controllers, localization, guards, metrics and storage |
+| [Setup](docs/setup.md) | Local run, configuration, test-mode Stripe and current-session test settings |
+| [Testing](docs/testing.md) | Test categories, fast/UI commands, CI lanes, coverage and reporting |
+| [Contributing](docs/contributing.md) | Change/review discipline and test selection |
+| [Runner isolation record](docs/PUBLIC_ACTIONS_RUNNER_ISOLATION_2026-10-18.md) | Dated risk/decision and source-versus-live verification limits |
 
-### Local Scripts (Windows/PowerShell)
+API, localization, security/limits and metrics are owned by Architecture and the
+agent guide; separate api/products, internationalization, security-and-limits,
+metrics and roadmap pages are not present in this checkout. Use the Overview's
+future-scope section rather than treating a missing roadmap file as authority.
+The Russian entrypoint is [README.ru.md](README.ru.md); the maintained detailed
+guides are English, with no additional docs/*/*.ru.md copies in this tree.
+
+<a id="local-scripts-windowspowershell"></a>
+
+### Optional Machine-Local Helpers
+
+The following historical PowerShell helpers are not shipped in this checkout:
+`scripts/` is ignored machine-local tooling. Keep these examples only for an
+operator who already has compatible helpers; standard tracked run/test commands
+are in Setup and Testing. No helper script is required by the application or CI.
 
 - Start app with health check (non-blocking):
   - `./scripts/start-app.ps1 -Url http://127.0.0.1:5123 -Configuration Release`
@@ -49,7 +64,9 @@ A simple ASP.NET Core MVC demo app for browsing fun “job-themed” socks, addi
   - UI smoke: `./scripts/run-tests.ps1 -Suite ui-smoke -BaseUrl http://127.0.0.1:5123`
   - Results: `.logs/TestResults/<Suite>`, console log: `.logs/test-<Suite>.log`
 
-For Russian-language docs, see `README.ru.md` and `docs/*/*.ru.md` counterparts.
+Generated helper output under `.logs/` is local diagnostic material, not source
+or a permanent test fixture. Preserve useful sanitized findings in the owning
+guide before discarding a capture.
 
 ## License
 
@@ -64,10 +81,13 @@ See `LICENSE`.
 - Branch and pull-request runs execute only the fast Unit + Integration +
   API-Smoke gate. A newer run for the same branch or pull request cancels the
   obsolete run.
-- Full regression, UI smoke, coverage/report publication, and Azure deployment
-  run only for an annotated `vX.Y.Z` tag whose commit is current `main` HEAD.
-  Release-tag runs are not auto-cancelled.
-- Allure Report (GitHub Pages): https://rudExtremo.github.io/SocksShoppingStore.
+- Full release regression, release UI smoke, coverage/report publication and
+  Azure deployment run only for an annotated `vX.Y.Z` tag whose commit is current
+  `main` HEAD. Release-tag runs are not auto-cancelled.
+- Explicit `workflow_dispatch` with `run_ui=true` can additionally run the
+  separate hosted manual-UI job; that job does not publish reports or deploy.
+- Recorded Allure report location: [GitHub Pages](https://rudExtremo.github.io/SocksShoppingStore).
+  Its current publication is not reverified by documentation or local hygiene checks.
 
 Badges:
 

@@ -18,6 +18,12 @@ Canonical docs live in `docs/`:
 - `docs/testing.md`
 - `docs/SOCKS_AGENT_GUIDE.md` (this file)
 
+Contributor guidance is in `docs/contributing.md`; dated CI routing evidence and
+its remaining live-assignment gate are in
+`docs/PUBLIC_ACTIONS_RUNNER_ISOLATION_2026-10-18.md`. Current source/workflow
+contracts take precedence over old operational snapshots.
+
+
 ---
 
 ## 1) What this project is
@@ -48,15 +54,25 @@ Health:
 
 ### Run tests
 
-See `docs/testing.md` for details. Common entrypoints:
+[Testing](testing.md) owns the complete commands, environment precedence and
+fast/tagged/manual-UI lanes. Bash quick references:
 
-- Non-UI fast suite:
-  - `setx USE_TEST_FACTORY 1`
-  - `dotnet test SocksShoppingStore.Tests/SocksShoppingStore.Tests.csproj -c Release --filter "TestCategory=Unit|TestCategory=Integration|TestCategory=API-Smoke"`
+```bash
+# Fast Unit/Integration/API suite; no external server or browser
+USE_TEST_FACTORY=1 RUN_UI_TESTS=0 dotnet test \
+  SocksShoppingStore.Tests/SocksShoppingStore.Tests.csproj -c Release \
+  --filter "TestCategory=Unit|TestCategory=Integration|TestCategory=API-Smoke"
 
-- UI smoke (requires running app + `BASE_URL`):
-  - `setx RUN_UI_TESTS 1`
-  - `dotnet test SocksShoppingStore.Tests/SocksShoppingStore.Tests.csproj -c Release --filter "TestCategory=UI-Smoke"`
+# Explicit UI smoke; first start the app at the selected BASE_URL
+BASE_URL=http://127.0.0.1:5123 RUN_UI_TESTS=1 USE_TEST_FACTORY=0 \
+  IGNORE_CERT_ERRORS=0 dotnet test \
+  SocksShoppingStore.Tests/SocksShoppingStore.Tests.csproj -c Release \
+  --filter "TestCategory=UI-Smoke"
+```
+
+For PowerShell use `$env:NAME = 'value'` in the current session as documented in
+Setup. `setx` persists future-shell values and does not prepare the current test
+process. Keep explicit UI/browser selection separate from the ordinary fast gate.
 
 ---
 

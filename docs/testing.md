@@ -2,6 +2,12 @@
 
 This repo uses a layered NUnit test suite (Unit / Integration / API / UI) with Allure reporting and coverage collection in CI.
 
+Documentation/source review: 2026-10-24. Commands and CI lanes below follow the
+tracked TestSettings and workflow; this review does not prove a live UI run,
+report publication, runner assignment or deployment. [Setup](setup.md) owns
+server/configuration details and current-session PowerShell variables.
+
+
 ## Test Project Structure
 
 All tests live in `SocksShoppingStore.Tests`:
@@ -29,28 +35,41 @@ Supported keys:
 
 ### Fast (no external server)
 
-Integration/API tests can run without starting the app when `USE_TEST_FACTORY=1`.
+Run only Unit, Integration and API-Smoke through the in-memory host:
 
-- PowerShell:
-  - `setx USE_TEST_FACTORY 1`
-  - `dotnet test SocksShoppingStore.Tests/SocksShoppingStore.Tests.csproj -c Release --filter "TestCategory=Unit|TestCategory=Integration|TestCategory=API-Smoke"`
+```bash
+USE_TEST_FACTORY=1 RUN_UI_TESTS=0 dotnet test \
+  SocksShoppingStore.Tests/SocksShoppingStore.Tests.csproj -c Release \
+  --filter "TestCategory=Unit|TestCategory=Integration|TestCategory=API-Smoke"
+```
+
+PowerShell uses current-process variables, not `setx`:
+
+```powershell
+$env:USE_TEST_FACTORY = '1'
+$env:RUN_UI_TESTS = '0'
+dotnet test SocksShoppingStore.Tests/SocksShoppingStore.Tests.csproj -c Release --filter "TestCategory=Unit|TestCategory=Integration|TestCategory=API-Smoke"
+```
 
 ### UI Smoke (requires a running server)
 
-UI tests require the application to be running and reachable by `BASE_URL`.
+First start the application as described in Setup. In the test session select
+its actual `BASE_URL`, set `RUN_UI_TESTS=1`, `USE_TEST_FACTORY=0` and, for trusted
+HTTPS or ordinary HTTP, `IGNORE_CERT_ERRORS=0`:
 
-- Start the app:
-  - `dotnet run --project SocksShoppingStore/SocksShoppingStore.csproj --launch-profile https`
-- Enable UI tests:
-  - `setx RUN_UI_TESTS 1`
-- Run UI smoke:
-  - `dotnet test SocksShoppingStore.Tests/SocksShoppingStore.Tests.csproj -c Release --filter "TestCategory=UI-Smoke"`
+```bash
+BASE_URL=http://127.0.0.1:5123 RUN_UI_TESTS=1 USE_TEST_FACTORY=0 \
+  IGNORE_CERT_ERRORS=0 dotnet test \
+  SocksShoppingStore.Tests/SocksShoppingStore.Tests.csproj -c Release \
+  --filter "TestCategory=UI-Smoke"
+```
 
-If you run the server over HTTP, set:
-
-- `setx BASE_URL http://127.0.0.1:5123`
-- `setx IGNORE_CERT_ERRORS 0`
-- `setx USE_TEST_FACTORY 0`
+For HTTPS use the server's printed URL after trusting the development certificate.
+For HTTP keep `HttpsRedirect__Enabled=false` on the server. See Setup for the
+complete PowerShell test session and relaxed CI-style HTTP server configuration.
+UI tests are explicit browser/server work, separate from the ordinary fast gate.
+The declared `UI-Regression` category can be selected for an intentional local
+regression run; it is not part of the branch/PR fast filter.
 
 ## Categories and Conventions
 
@@ -60,6 +79,10 @@ Categories used across the suite:
 - `Integration`
 - `API-Smoke`
 - `UI-Smoke`
+- `UI-Regression` (explicit local regression selection)
+
+Tests also carry cross-cutting Positive, Negative, Boundary and Security labels.
+Directory placement alone does not choose a runtime category.
 
 Allure conventions:
 
@@ -69,32 +92,53 @@ Allure conventions:
 
 ## CI Workflow
 
-Workflow file: `.github/workflows/test-and-report.yml`.
+Source authority: `.github/workflows/test-and-report.yml`; the public-runner
+selection contract is `ci/test_runner_routing.py`. All three jobs declare
+`ubuntu-latest`; dispatch accepts only `runner=hosted`. No workflow edit or live
+run is part of documentation cleanup.
 
-### `dev` branch
+<a id="dev-branch"></a>
 
-- Runs fast suite: `Unit + Integration + API-Smoke`.
-- Runs scoped coverage for Integration and API.
-- Uploads Allure raw results and coverage artifacts.
+### Branch And Pull Request Checks
 
-### `main` branch and Pull Requests
+The `quick` job runs for pull requests targeting main and for routed/manual
+branch `workflow_dispatch`. RunnerRouter owns automatic branch scheduling; the
+workflow has no direct push trigger. It runs the fast Unit + Integration +
+API-Smoke filter with `USE_TEST_FACTORY=1` and `RUN_UI_TESTS=0`, plus the Python
+runner contracts. Ordinary branch/PR jobs do not collect or publish reports,
+start UI smoke or deploy. A newer run for the same branch/PR cancels the old one.
 
-- Starts the app in **HTTP** mode on `http://127.0.0.1:5123` with relaxed limits:
-  - `FreeTier__Enabled=false`
-  - `RateLimiting__GlobalPerMinute=1000`
-  - `RateLimiting__ApiPerMinute=1000`
-  - `HttpsRedirect__Enabled=false`
-- Runs non-UI tests with coverage (`coverlet.runsettings`).
-- Runs `UI-Smoke` separately (no coverage).
-- Aggregates `**/allure-results` into a single Allure results folder.
-- Generates:
-  - Allure HTML report
-  - Coverage HTML report (ReportGenerator)
-- Publishes reports to GitHub Pages (branch `gh-pages`).
+<a id="main-branch-and-pull-requests"></a>
+
+### Tagged Release Regression And Publication
+
+The `main-tests` job is selected only by tag `workflow_dispatch`, then checks
+that `vX.Y.Z` is an annotated tag on current origin/main HEAD. Tagged runs are
+not auto-cancelled. This job:
+
+- starts the app over HTTP on `http://127.0.0.1:5123` with
+  `FreeTier__Enabled=false`, both rate limits set to 1000 and
+  `HttpsRedirect__Enabled=false`;
+- runs non-UI tests through the factory with `coverlet.runsettings`;
+- runs `UI-Smoke` separately against the server without test-process coverage;
+- aggregates Allure results, generates Allure and ReportGenerator HTML, and
+  publishes the report site to the `gh-pages` branch;
+- publishes/deploys the application through the existing Azure step;
+- includes the separate running-server `coverlet.console` UI instrumentation
+  step and result collection. Its existence is not a fresh coverage measurement.
+
+Exact commands, permissions, secrets and ordering remain in the unchanged
+workflow. A documentation change does not establish that any job succeeded.
 
 ### Manual UI run
 
-Workflow supports `workflow_dispatch` input `run_ui=true` to run UI smoke.
+Explicit `workflow_dispatch` with `run_ui=true` selects the separate hosted
+`manual-ui` job, including on a branch. It starts the app and runs UI-Smoke; it
+does not publish reports or deploy to Azure. It may run alongside the selected
+branch/release job; normal fast verification does not need this input.
+
+The [isolation record](PUBLIC_ACTIONS_RUNNER_ISOLATION_2026-10-18.md) retains the
+historical risk and the distinction between current source and live runner proof.
 
 ## Coverage Collection
 
@@ -104,7 +148,26 @@ Coverage runsettings files live at repo root:
 - `coverlet.integration.runsettings`
 - `coverlet.api.runsettings`
 
-In CI, coverage is generated for non-UI tests by default. There is an additional CI step that can instrument the running app with `coverlet.console` to collect “UI coverage”.
+Coverage/report generation belongs to the tagged release lane, not ordinary
+branch or PR checks. The additional `coverlet.console` step instruments the
+running application for UI coverage; do not confuse it with covering the Selenium
+test process. Local scoped collection remains available:
+
+```bash
+# Unit/Integration report with the existing settings
+USE_TEST_FACTORY=1 RUN_UI_TESTS=0 dotnet test \
+  SocksShoppingStore.Tests/SocksShoppingStore.Tests.csproj -c Release \
+  --filter "TestCategory=Unit|TestCategory=Integration" --settings coverlet.runsettings
+
+# API-only report
+USE_TEST_FACTORY=1 RUN_UI_TESTS=0 dotnet test \
+  SocksShoppingStore.Tests/SocksShoppingStore.Tests.csproj -c Release \
+  --filter "TestCategory=API-Smoke" --settings coverlet.api.runsettings
+```
+
+Generated TestResults, coverage and Allure outputs remain local/CI artifacts
+under the existing scoped ignores; preserve useful source/run/result summaries
+rather than committing raw generated output. No blanket XML/text ignore is needed.
 
 ## UI Stability Notes
 
@@ -114,7 +177,8 @@ In CI, coverage is generated for non-UI tests by default. There is an additional
 
 ## Repository Hygiene — 2026-10-24
 
-Status: PLANNED before implementation. Scope: local SocksShoppingStore cleanup
+Status: COMPLETE for the local cleanup scope; the plan was recorded before
+implementation in `293a9e6`. Scope: local SocksShoppingStore cleanup
 on the existing clean dev branch; no other repository or provider is included.
 No application/test/CI behavior, API, payment, session, security, legal, dependency
 or published product contract changes are planned. No push/main promotion,
@@ -148,9 +212,9 @@ do not add blanket *.txt/XML rules or delete any other ignored/local material.
 | Stage | State | Scope and preservation |
 | --- | --- | --- |
 | M1: analysis/plan | COMPLETE | Read guides, source TestSettings, workflow/routing contracts and imports; inventory exact files and current documentation gaps. |
-| M2: selective cleanup | PLANNED | Delete exactly the three indexed diagnostics; add the two narrow ignores; retain live Razor imports and all application/test/CI/script/license/configuration inputs. |
-| M3: documentation organization | PLANNED | Correct missing-document pointers and identify optional unshipped local helpers. Replace setx examples with current-process PowerShell/Bash variables. Reconcile fast/tagged/manual-UI lanes and declared categories with source, retaining all report, coverage, runtime, future-scope and acceptance information. Keep the Russian README, architecture, agent adapters and dependency licenses unchanged. |
-| M4: final validation | PLANNED | Run the existing five Python CI routing contracts once; check exact deletions/blobs/bytes, live-import preservation, ignore controls, original anchors/local links and retained contracts; run git diff --check. Full .NET/UI/coverage/deployment gates are not required for this docs/ignore/unused-output-only scope. |
+| M2: selective cleanup | COMPLETE (`17740f7`) | Delete exactly the three indexed diagnostics; add the two narrow ignores; retain live Razor imports and all application/test/CI/script/license/configuration inputs. |
+| M3: documentation organization | COMPLETE | Correct missing-document pointers and identify optional unshipped local helpers. Replace setx examples with current-process PowerShell/Bash variables. Reconcile fast/tagged/manual-UI lanes and declared categories with source, retaining all report, coverage, runtime, future-scope and acceptance information. Keep the Russian README, architecture, agent adapters and dependency licenses unchanged. |
+| M4: final validation | COMPLETE | All five existing Python CI routing contracts passed once; 95 hygiene/preservation checks passed; git diff --check passed. Exact deletions/blobs/bytes, live imports, ignore controls, original anchors/local links and retained contracts verified. Full .NET/UI/coverage/deployment gates are not required for this docs/ignore/unused-output-only scope. |
 
 Documentation owners remain the five core guides; contributing instructions
 and the dated runner-isolation record have distinct supporting roles. No new
@@ -163,3 +227,40 @@ Rollback: revert the selective diagnostic/ignore commit to restore exact files
 and previous ignores; revert documentation commits independently. Git history
 and existing clones retain original raw diagnostics; this is not a privacy purge
 or a history rewrite. Capture no raw log content in replacement outputs.
+
+### Cleanup Validation Evidence
+
+Executed on 2026-10-24:
+
+- In the repository root, `python3 ci/test_runner_routing.py`: exit 0, all five
+  existing source-routing contracts passed, with no failures or skips. This is
+  the applicable fast STABLE source-contract suite, executed once after the
+  planned implementation; it does not observe a real hosted runner assignment.
+- From the local audit workspace,
+  `python3 /home/morozhenko/Documents/Codex/2026-10-24/x20/work/socks-cleanup/validate_cleanup.py`:
+  exit 0, 95 hygiene/preservation checks passed. Exact Git commands/statuses are
+  recorded in that workspace's `outputs/SOCKS_CLEANUP_VALIDATION.json`.
+- `git diff --check 18ea7a6ba1a4739d4d4ad0aa9aa5a0a7fefda864`: exit 0.
+- Four generated-path controls match the intended ignores; ten text, nested,
+  Razor, test, coverage-setting, CI and license controls remain outside them
+  (`git check-ignore --no-index`, expected exits 0 and 1 respectively).
+- The live `_ViewImports.cshtml` is byte-identical to the baseline and retains
+  all five scratch-copy directives plus its two additional imports. No unique
+  temporary directive was removed. Full diagnostic bytes match their retained
+  immutable Git hashes; no raw logs were copied into replacement artifacts.
+- Agent runtime/API/cart/payment/security/configuration contracts, setup
+  contracts, implemented/future scope, Allure/UI conventions and the historical
+  runner-risk/rollback record remain intact. Original heading anchors remain;
+  no new broken local Markdown target/anchor was found. Corrected commands use
+  the existing TestSettings precedence, category declarations and workflow.
+
+The cleanup changes only seven existing English documentation files, two narrow
+ignore entries and the three unused diagnostic files. Architecture, Russian
+README, agent adapters, dependency licenses, runtime/configuration, tests,
+workflows and coverage inputs are unchanged. No new product tests were added.
+Full .NET/NUnit runtime, browser/UI, coverage, build, known-flaky, provider/CI,
+publication and deployment gates were NOT RUN. PowerShell/server examples were
+reviewed against source, not executed; no app process was started. No runtime
+stability, current hosted quota/pricing, published report or production claim is
+made. All work remains local on dev; no push, main promotion, tag, history
+rewrite, external message or other-repository change was performed.

@@ -2,13 +2,23 @@
 
 SocksShoppingStore is a small ASP.NET Core 8 MVC demo app for browsing “job-themed” socks, adding them to a session-backed cart, and running a test-mode checkout flow (Stripe Checkout). The repo is intentionally designed as a QA/automation showcase: the app stays simple, but includes production-friendly concerns (security headers/CSP, rate limiting, concurrency cap, minimal metrics, localization) and a layered test suite with CI reporting.
 
-## Canonical Documentation (5 files)
+<a id="canonical-documentation-5-files"></a>
 
-- `docs/overview.md` — this file (purpose, constraints, roadmap)
-- `docs/setup.md` — local run, configuration, Stripe, test settings
-- `docs/architecture.md` — code map, request pipeline, endpoints, core flows
-- `docs/testing.md` — tests, CI pipeline, Allure + coverage
-- `docs/SOCKS_AGENT_GUIDE.md` — “full context” guide for coding agents
+## Documentation Owners
+
+The five core guides retain distinct ownership:
+
+- [Overview](overview.md) — purpose, constraints and explicitly future roadmap.
+- [Setup](setup.md) — local run, configuration, Stripe and test environment.
+- [Architecture](architecture.md) — code map, pipeline, endpoints and core flows.
+- [Testing](testing.md) — commands, categories, CI lanes, coverage and evidence.
+- [Agent guide](SOCKS_AGENT_GUIDE.md) — high-signal handoff and runtime invariants.
+
+[Contributing](contributing.md) is contributor/review guidance; the
+[runner-isolation record](PUBLIC_ACTIONS_RUNNER_ISOLATION_2026-10-18.md) is dated
+risk/verification evidence. Neither is a replacement product contract. Keep the
+Russian root README, component/dependency licenses and working Razor inputs in
+their existing roles. A source check does not prove a live CI deployment.
 
 ## What’s Implemented Today
 
@@ -27,7 +37,9 @@ SocksShoppingStore is a small ASP.NET Core 8 MVC demo app for browsing “job-th
 
 ## Roadmap (Vision)
 
-This roadmap is a guide for future expansion. Many items are not implemented yet.
+This roadmap is a guide for future expansion. Many items are not implemented yet. These
+ideas are retained product context, not authorization to implement them during
+repository cleanup.
 
 ### Principles
 
@@ -53,7 +65,10 @@ This roadmap is a guide for future expansion. Many items are not implemented yet
 
 - Catalog price validation UX (invalid inputs, min > max messaging).
 - Cart decrement-to-zero behavior (currently clamps at `>=1` unless deleted).
+  This is the current explicit cart contract, not a change made by cleanup.
 - UI coverage collection in CI (initial wiring exists; iterate as needed).
+  The workflow contains a tagged-release instrumentation step; actual collected
+  coverage and successful publication require a matching run receipt.
 
 ## Contributing Guidelines (short)
 
