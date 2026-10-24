@@ -99,8 +99,8 @@ Milestones:
 1. [x] Inspect presets, canonical owner rules, tracked consumers and clean state;
    preserve baseline hashes and original Markdown outside the checkout.
 2. [x] Record removal rationale and retain neutral useful rules before deletion.
-3. [ ] Remove unreferenced presets and scoped metadata in a separate config commit.
-4. [ ] Validate exact changes/deletions, protected hashes, links, neutral rules and
+3. [x] Remove unreferenced presets and scoped metadata in a separate config commit.
+4. [x] Validate exact changes/deletions, protected hashes, links, neutral rules and
    no runtime/CI references; update evidence in a separate docs handoff commit.
 
 Rollback: normal inverse scoped commits or restore exact removed files from the
@@ -137,3 +137,13 @@ Continue after tool/context interruption only when supported, from repository
 evidence; never invent background work. Report changed owners, exact commands and
 exit statuses, stable/flaky/skipped results, commits, remaining limits and rollback.
 No IDE preset, model preference or forced delegation is required by this policy.
+
+Final evidence: the task-local processed-tooling validator passed all
+428/428 scoped static checks for this repository: exact removed paths,
+203 protected SHA-256 hashes, 23 local/inbound Markdown links, no new broken
+links and no runtime/CI consumer of a removed preset. `git diff b0e788fd8976f9598ce9fa647a45a194449c1932
+--check` exited 0. No app/runtime/build/test/audit/provider or release operation
+was run or claimed. No ignored/local file was deleted; no push/promotion occurred.
+The final docs handoff commits this evidence separately from template removal;
+all owned commands exited with no active terminal/server. Restore deleted files
+from the recorded baseline or revert the scoped commits to roll back.
