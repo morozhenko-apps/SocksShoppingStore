@@ -75,3 +75,65 @@ and Allure naming/metadata/screenshot conventions are owned by
 Adding UI-Smoke to a command labelled fast would require an external server and
 browser; keep it separate. Use current-process PowerShell variables rather than
 persistent `setx` examples when following Setup on Windows.
+
+## Unused editor/model preset cleanup — 2026-10-24
+
+Mode A. Owner explicitly authorized removing unnecessary IDE/model configuration
+from previously processed repositories. Baseline `b0e788fd8976f9598ce9fa647a45a194449c1932`, clean local
+dev. This supersedes earlier retention/model-adapter decisions, without reopening
+product, test, security, data or release scope.
+
+Remove only: `.github/agents/ORCHESTRATOR.md`, `.github/agents/SUB AGENT.md`.
+No source/workflow/build consumer needs these presets. Useful rules stay in
+`docs/contributing.md`; current entrypoint references are corrected. Old audit/rollout
+path names remain historical evidence, not dangling runtime dependencies. Retired
+model selections, forced delegation and obsolete test quotas are not copied into
+another active preset. Deleted originals remain recoverable from baseline Git.
+
+Scope excludes application/tests, CI workflows, dependencies, legal/public inputs,
+provider/secret/data operations, ignored/local state, push/promotion or deployment.
+No new Markdown policy owner or IDE/model dependency is introduced. Keep existing
+useful ignores and tool-neutral contributor/run/debug instructions.
+
+Milestones:
+1. [x] Inspect presets, canonical owner rules, tracked consumers and clean state;
+   preserve baseline hashes and original Markdown outside the checkout.
+2. [x] Record removal rationale and retain neutral useful rules before deletion.
+3. [ ] Remove unreferenced presets and scoped metadata in a separate config commit.
+4. [ ] Validate exact changes/deletions, protected hashes, links, neutral rules and
+   no runtime/CI references; update evidence in a separate docs handoff commit.
+
+Rollback: normal inverse scoped commits or restore exact removed files from the
+baseline. No runtime or data rollback is needed. Historical report claims apply
+to their original checkpoints; do not treat them as fresh external verification.
+
+## Tool-neutral engineering discipline
+
+Communicate with the owner in Russian; code, comments, docs and commits are English.
+Select one primary feature/refactor or testing mode. Analyze actual source, tools,
+contracts and relevant owners; record scope, staged plan, rationale, risks and
+rollback before implementation. Resolve routine choices autonomously; stop only
+for material architecture/API/persistent-format/security/compatibility or agreed
+scope decisions, or indispensable missing input. Preserve behavior in refactors.
+Track milestones and exact evidence so another engineer can continue without oral
+context. Keep documentation and executable/configuration commits separate.
+
+Use explicit dependencies, minimal globals, predictable side effects and clear
+contracts. Diagnose observed defects before fixing their cause; remove temporary
+traces and add regression protection. Never weaken assertions, hide defects behind
+flags, swallow failures or mask them with arbitrary sleeps/retries. Do not mock
+the domain/subject; fake external boundaries with deterministic clocks/RNG/storage/
+network. Tests use Given/When/Then, AAA and order-independent exact outcomes.
+
+Testing requires every scoped artifact/branch/invariant, Positive and applicable
+N1–N12 cells, boundaries, interactions, per-file coverage and mutation review before
+completion. Do not replace complete planning with arbitrary scenario/test quotas.
+Prefer unit/domain, then integration/contracts and critical E2E. Run required stable
+checks once at the final gate; known-flaky cases separately and bounded targeted
+reruns for diagnosis. Respect actual CI/release gates; no zero-flakiness claim from
+repetition alone. Manage only one owned terminal/session at a time, close owned
+processes after evidence and never interfere with user/other-agent sessions.
+Continue after tool/context interruption only when supported, from repository
+evidence; never invent background work. Report changed owners, exact commands and
+exit statuses, stable/flaky/skipped results, commits, remaining limits and rollback.
+No IDE preset, model preference or forced delegation is required by this policy.
