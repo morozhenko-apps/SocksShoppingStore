@@ -1,5 +1,0 @@
-@using SocksShoppingStore
-@using SocksShoppingStore.Models
-@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
-@using Microsoft.Extensions.Localization
-@inject IStringLocalizer<SocksShoppingStore.SharedResource> T

@@ -28,6 +28,10 @@ docs/test-coverage-report.md
 [Ll]og/
 .logs/
 
+# Root diagnostic outputs (Razor scratch copy and CI application stdout)
+/tmp_viewimports.txt
+/app.log
+
 # Local developer scripts (not for repo)
 scripts/
 
