@@ -68,3 +68,28 @@ This is a classic ASP.NET Core MVC app structured by responsibility:
 - `HttpsRedirect:Enabled`: allow disabling HTTPS redirect (used by CI HTTP runs)
 
 Testing details live in `docs/testing.md`.
+
+## Payment state scope and verification plan — 2026-10-25
+
+Status: PLAN RECORDED; current demo contract unchanged. Audit F08 identifies
+process-local PaymentSessionStore state, not a demonstrated defect in this QA
+showcase. The agent guide explicitly specifies Stripe test-mode checkout;
+StripeCheckoutService already rejects missing/non-sk_test_ keys before creating
+the SDK client. No live checkout or durable order-processing contract is promised.
+
+Payment drafts/completion flags and session-backed cart/order state can disappear
+on restart, deployment or another process. Do not copy this store as a durable
+payment receipt, fulfillment ledger or multi-instance synchronization mechanism.
+Real commerce/persistence would require its own owner-selected data, hosting,
+migration, idempotency and recovery design. The initially offered SQLite choice
+was premature; no owner response is needed to preserve the existing demo.
+
+Plan: keep in-memory semantics and existing key guards; add a minimal injectable
+SDK session-creation boundary so real guard behavior can be tested without any
+Stripe network, including on a regression; cover missing/live/non-test/case/prefix
+keys plus allowed test-key delegation and propagated provider failure. Run the
+documented fast Unit/Integration/API-Smoke gate with the real .NET8 runtime and
+UI/browser/external Stripe disabled. Record commands, results and rollback in
+Testing. Keep docs/source commits separate. No database, schema, checkout policy,
+key, provider, publication or production feature is added. Revert the scoped
+testability commit for source rollback; documentation retains the demo limits.
