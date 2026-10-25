@@ -93,3 +93,14 @@ UI/browser/external Stripe disabled. Record commands, results and rollback in
 Testing. Keep docs/source commits separate. No database, schema, checkout policy,
 key, provider, publication or production feature is added. Revert the scoped
 testability commit for source rollback; documentation retains the demo limits.
+
+The SDK boundary receives the same validated key snapshot even if mutable options
+change during logging; the refactor must not introduce a check/use gap. A
+deterministic logging interleaving regression covers that invariant.
+
+Public-only restore also reproduced NU1603: declared Stripe.net42.30.0 does not
+exist in the public feed and resolves approximately to43.0.0. Align the reference
+to the exact already-effective43.0.0; compare resolved package identities before
+and after to prove no package graph upgrade. Keep that provenance correction in
+its own executable commit, then repeat only affected/final fast gates. Do not
+silence warnings or move to another SDK generation.
