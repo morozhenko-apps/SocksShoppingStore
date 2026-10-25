@@ -28,6 +28,7 @@ builder.Services.AddSession(options =>
 // Payments
 builder.Services.AddScoped<SocksShoppingStore.Services.StripeCheckoutService>();
 builder.Services.AddSingleton<SocksShoppingStore.Services.PaymentSessionStore>();
+builder.Services.AddSingleton(TimeProvider.System);
 builder.Services.AddSingleton<SocksShoppingStore.Services.TotalsCalculator>();
 builder.Services.AddSingleton<SocksShoppingStore.Services.PdfInvoiceService>();
 

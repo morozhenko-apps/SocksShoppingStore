@@ -9,12 +9,14 @@ namespace SocksShoppingStore.Services
         private readonly TaxOptions _taxOptions;
         private readonly ShippingOptions _shippingOptions;
         private readonly PromoOptions _promoOptions;
+        private readonly TimeProvider _timeProvider;
 
-        public TotalsCalculator(IOptions<TaxOptions> tax, IOptions<ShippingOptions> shipping, IOptions<PromoOptions> promo)
+        public TotalsCalculator(IOptions<TaxOptions> tax, IOptions<ShippingOptions> shipping, IOptions<PromoOptions> promo, TimeProvider? timeProvider = null)
         {
             _taxOptions = tax.Value;
             _shippingOptions = shipping.Value;
             _promoOptions = promo.Value;
+            _timeProvider = timeProvider ?? TimeProvider.System;
         }
 
         public (OrderTotals totals, string appliedShipping, string? appliedPromo) Compute(IEnumerable<OrderItem> items, string? shippingCode, string? promoCode, bool estimated)
@@ -110,10 +112,10 @@ namespace SocksShoppingStore.Services
             return _promoOptions.Codes?.FirstOrDefault(c => string.Equals(c.Code, code, StringComparison.OrdinalIgnoreCase));
         }
 
-        private static bool IsPromoActive(PromoCode promo)
+        private bool IsPromoActive(PromoCode promo)
         {
             if (!promo.Active) return false;
-            if (promo.ExpiresUtc.HasValue && promo.ExpiresUtc.Value < DateTimeOffset.UtcNow) return false;
+            if (promo.ExpiresUtc.HasValue && promo.ExpiresUtc.Value < _timeProvider.GetUtcNow()) return false;
             return true;
         }
     }
