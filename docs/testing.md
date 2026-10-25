@@ -264,3 +264,11 @@ reviewed against source, not executed; no app process was started. No runtime
 stability, current hosted quota/pricing, published report or production claim is
 made. All work remains local on dev; no push, main promotion, tag, history
 rewrite, external message or other-repository change was performed.
+
+## Demo checkout and dependency provenance — 2026-10-25
+
+Source `b97fc95d004f9bbeb6b1410c8e2c4c6773415247` adds12 deterministic Unit regressions:3 missing-key,6 non-test/case/prefix keys,1 allowed test-key/options delegation,1 external failure,1 options-change interleaving. The actual StripeCheckoutService is exercised; only SDK session creation/logging are external fakes, so a guard regression cannot send a real request. A validated key snapshot prevents logging/config mutation from substituting a live key. Existing missing/non-test rejection, demo fallback and process-local storage remain unchanged. F08 is a current demo limitation; no persistent-store/product choice is required unless scope becomes real commerce.
+
+Public-only restore originally warned NU1603 for nonexistent Stripe.net42.30.0 and selected43.0.0. Commit `146ef5be9566c2116b839ec08c399429e0efa17a` pins that already-effective version exactly; every resolved package identity remains identical, and NU1603 is gone. This is not a move to another runtime graph.
+
+Actual SDK8.0.426/.NET8: restore exit0; focused StripeCheckoutGuardTests exit0/12 passed; final USE_TEST_FACTORY=1 RUN_UI_TESTS=0 dotnet test SocksShoppingStore.Tests/SocksShoppingStore.Tests.csproj -c Release --no-restore -p:UseSharedCompilation=false --filter "TestCategory=Unit|TestCategory=Integration|TestCategory=API-Smoke" exit0/108 passed/0 failed/0 skipped. The inherited page-object nullable warnings and in-process HTTPS-port warnings remain visible; no warning suppression. Browser/UI, real Stripe/customer, external server, release and provider acceptance were not run. No separately configured flaky group was identified/run. Revert the two executable commits separately; no provider/data/database rollback.

@@ -71,7 +71,7 @@ Testing details live in `docs/testing.md`.
 
 ## Payment state scope and verification plan — 2026-10-25
 
-Status: PLAN RECORDED; current demo contract unchanged. Audit F08 identifies
+Status: SOURCE/DEMO GUARD VERIFIED LOCALLY; current demo contract unchanged. Audit F08 identifies
 process-local PaymentSessionStore state, not a demonstrated defect in this QA
 showcase. The agent guide explicitly specifies Stripe test-mode checkout;
 StripeCheckoutService already rejects missing/non-sk_test_ keys before creating
@@ -104,3 +104,5 @@ to the exact already-effective43.0.0; compare resolved package identities before
 and after to prove no package graph upgrade. Keep that provenance correction in
 its own executable commit, then repeat only affected/final fast gates. Do not
 silence warnings or move to another SDK generation.
+
+The default transport still uses the existing Stripe client; only that external call is injectable. All missing/non-test checks use one key snapshot, before the adapter, and in-memory payment/session behavior is unchanged. The original F08 remains a documented demo limitation, not an accepted production persistence design.

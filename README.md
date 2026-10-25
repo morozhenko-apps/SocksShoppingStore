@@ -93,3 +93,7 @@ Badges:
 
 ![CI Dev](https://github.com/rudExtremo/SocksShoppingStore/actions/workflows/test-and-report.yml/badge.svg?branch=dev)
 
+
+## Demo payment durability boundary
+
+Checkout is test-only: the service rejects missing/non-sk_test_ secrets before the SDK adapter. PaymentSessionStore and session cart/order state are process-local and can be lost on restart, deployment or another instance. They are not durable payment receipts or fulfillment state. Real-commerce persistence/hosting/idempotency needs a separate product/architecture decision. Current guard and package provenance evidence is in [Testing](docs/testing.md#demo-checkout-and-dependency-provenance--2026-10-25).
