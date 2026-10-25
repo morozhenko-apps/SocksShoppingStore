@@ -106,3 +106,7 @@ its own executable commit, then repeat only affected/final fast gates. Do not
 silence warnings or move to another SDK generation.
 
 The default transport still uses the existing Stripe client; only that external call is injectable. All missing/non-test checks use one key snapshot, before the adapter, and in-memory payment/session behavior is unchanged. The original F08 remains a documented demo limitation, not an accepted production persistence design.
+
+## Deterministic promo clock follow-up — 2026-10-25
+
+Mode A. Preserve the existing QA demo, tax/shipping rules and inclusive promo expiry boundary (active at exactly ExpiresUtc, expired only afterward). Inject .NET TimeProvider with TimeProvider.System as the backward-compatible default; register the default explicitly for application composition. Read time once per expiry check. Add table-driven real TotalsCalculator cases for active/inactive, no expiry, before/equal/after expiry, alternate offsets, repeated clock advance/rollback, and retain existing totals assertions. No payment storage, currency, external Stripe or API behavior change. Final gate: focused tests and existing complete Unit/Integration/API-Smoke group once; docs/source commits separate. Rollback is scoped source revert; no data migration.
