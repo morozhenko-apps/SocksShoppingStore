@@ -276,3 +276,39 @@ Actual SDK8.0.426/.NET8: restore exit0; focused StripeCheckoutGuardTests exit0/1
 Promo-clock gate diagnostic: the first compile found CS0182 because decimal literals are not valid CLR attribute arguments. Table values now use integer attribute constants converted by NUnit into the existing decimal expected-value parameters; assertions and money precision remain unchanged. Repeat the affected complete fast gate after this test-declaration correction.
 
 Final .NET8 fast gate exits0:118 passed/0 skipped, including10 new clock cases. Exact tick-before/equal/after, offsets, inactive/no-expiry and forward/backward clock states preserve the existing rule. Initial attribute compile failure was corrected without assertion changes. Inherited nullable/page-object/HTTPS warnings remain. No real Stripe/browser/customer data.
+
+## CI toolchain maintenance
+
+Scope: refresh maintained GitHub Actions implementations while preserving existing
+permissions, triggers, runner routing, cache intent and release/publication gates.
+JavaScript action internals use supported Node24; this is distinct from project Node.
+
+Maintained action targets:
+
+- `actions/checkout`: `v7.0.1` (`3d3c42e5aac5ba805825da76410c181273ba90b1`).
+- `actions/setup-dotnet`: `v6.0.0` (`a98b56852c35b8e3190ac28c8c2271da59106c68`).
+- `actions/setup-java`: `v6.1.0` (`b843ebf9b913146b38da2eaa7aeddf76074ae1ad`).
+- `actions/upload-artifact`: `v7.0.2` (`cf430e030ddbb5b0abf93d22962f4752f3646cd9`).
+
+Milestones:
+
+- [x] Read current source, agent/CI owners, permanent refs and concurrent work.
+- [x] Record scope, compatibility decisions, validation and rollback before code.
+- [ ] Apply scoped action/toolchain and directly related source-contract changes.
+- [ ] Execute applicable stable checks once at the final gate; report separate
+  known-flaky/stability outcomes and unexecuted native/provider gates.
+- [ ] Record the final source/verification boundary and publish validated dev work.
+
+Planned validation:
+
+- Parse all affected workflow YAML and verify maintained action SHA/runtime identities.
+- Review diffs and preserve permissions, events, routing, signing/publication admission,
+  artifact names/paths and existing non-Node SDK versions.
+- `python3 ci/test_runner_routing.py`.
+
+Risk and rollback: action majors may change auth/cache/artifact or build-wrapper
+behavior; Node-major transitions require the existing tooling checks. Revert the
+scoped executable commit and its documentation update separately if needed. This
+maintenance does not authorize protected-branch promotion, tags, store upload,
+runner changes or cloud deployment. Native/device/provider acceptance remains
+independent of local checks. No architecture or application contract changes.
