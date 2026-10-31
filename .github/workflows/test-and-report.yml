@@ -42,14 +42,14 @@ jobs:
           apt-get install -y --no-install-recommends bash ca-certificates curl git gzip tar unzip xz-utils
           rm -rf /var/lib/apt/lists/*
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # actions/checkout@v7.0.1
         with:
           persist-credentials: false
 
       - name: Verify public runner selection contracts
         run: python3 ci/test_runner_routing.py
 
-      - uses: actions/setup-dotnet@v4
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # actions/setup-dotnet@v6.0.0
         with:
           dotnet-version: '8.0.x'
 
@@ -87,7 +87,7 @@ jobs:
             bash ca-certificates chromium chromium-driver curl git sudo
           rm -rf /var/lib/apt/lists/*
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # actions/checkout@v7.0.1
         with:
           fetch-depth: 0
           fetch-tags: true
@@ -109,7 +109,7 @@ jobs:
             echo "::error::Release tag must point to current origin/main HEAD"
             exit 1
           }
-      - uses: actions/setup-dotnet@v4
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # actions/setup-dotnet@v6.0.0
         with:
           dotnet-version: '8.0.x'
       - name: Restore
@@ -174,7 +174,7 @@ jobs:
 
       - name: Setup Java (for Allure CLI)
         if: success()
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # actions/setup-java@v6.1.0
         with:
           distribution: 'temurin'
           java-version: '17'
@@ -316,7 +316,7 @@ jobs:
           pkill -f "SocksShoppingStore.dll" || true
       - name: Upload coverage artifacts
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # actions/upload-artifact@v7.0.2
         with:
           name: coverage-main
           path: |
@@ -325,7 +325,7 @@ jobs:
             coverage-ui/coverage.cobertura.xml
       - name: Upload TRX (non-UI + UI)
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # actions/upload-artifact@v7.0.2
         with:
           name: trx-main
           path: |
@@ -336,8 +336,8 @@ jobs:
     if: github.event_name == 'workflow_dispatch' && inputs.run_ui == 'true'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-dotnet@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # actions/checkout@v7.0.1
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # actions/setup-dotnet@v6.0.0
         with:
           dotnet-version: '8.0.x'
       - name: Restore
@@ -364,7 +364,7 @@ jobs:
           dotnet test SocksShoppingStore.Tests/SocksShoppingStore.Tests.csproj -c Release --filter "TestCategory=UI-Smoke" --logger "trx;LogFileName=ui.trx"
       - name: Upload Allure results
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # actions/upload-artifact@v7.0.2
         with:
           name: allure-results-ui
           path: |
