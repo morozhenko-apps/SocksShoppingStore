@@ -276,3 +276,17 @@ Actual SDK8.0.426/.NET8: restore exit0; focused StripeCheckoutGuardTests exit0/1
 Promo-clock gate diagnostic: the first compile found CS0182 because decimal literals are not valid CLR attribute arguments. Table values now use integer attribute constants converted by NUnit into the existing decimal expected-value parameters; assertions and money precision remain unchanged. Repeat the affected complete fast gate after this test-declaration correction.
 
 Final .NET8 fast gate exits0:118 passed/0 skipped, including10 new clock cases. Exact tick-before/equal/after, offsets, inactive/no-expiry and forward/backward clock states preserve the existing rule. Initial attribute compile failure was corrected without assertion changes. Inherited nullable/page-object/HTTPS warnings remain. No real Stripe/browser/customer data.
+
+## Build toolchain maintenance integration
+
+The owner approved a scoped integration of the already validated maintenance into the current release branch through a reviewable PR. This authorization supersedes ordinary temporary-branch restrictions for this integration only. Build/CI tool versions change; application behavior, public contracts, data, credentials and immutable release identities remain unchanged. Upstream Actions keep their supported internal runtime; project Node tooling uses the exact maintained LTS pin.
+
+Plan:
+
+- [x] Inspect current release source, owning instructions, prior maintenance evidence and deployment triggers. Start from the current release head to preserve its unique commits.
+- [x] Record this plan before executable edits, with documentation and executable changes committed separately.
+- [ ] Apply only the reviewed Actions, Node and required compatibility/security corrections; adapt references to existing release workflows. Exclude unrelated accumulated development work.
+- [ ] Review complete diff and source invariants, run applicable final stable checks once, and reuse previous suite evidence only with exact source/lock equivalence. Keep native/store and release-only acceptance separate.
+- [ ] Create the scoped PR; integrate only after its exact-head required checks and existing production-admission conditions pass. Preserve concurrent release changes and never bypass branch protection.
+
+Rollback uses an ordinary revert of the scoped maintenance commits; no tag movement, resource recreation or provider/data rollback is part of this task. Existing automatic Git deployment ownership and triggers are preserved. A source/PR pass alone does not establish effective production Node or native/store acceptance.
